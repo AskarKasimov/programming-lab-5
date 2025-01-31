@@ -2,5 +2,6 @@ package command;
 
 public interface Command {
     void execute(String[] args); // Выполнить команду
-    String info(); // Получить информацию о команде
+    String getInfo(); // Получить информацию о команде
+    String getName(); // Получить имя команды
 }

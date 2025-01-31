@@ -1,3 +1,5 @@
+package object;
+
 public class MusicBand {
     private static long nextId = 1; // Для автоинкремента
     private long id; //Значение поля должн обыть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически

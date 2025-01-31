@@ -1,3 +1,5 @@
+package object;
+
 public enum Country {
     RUSSIA,
     UNITED_KINGDOM,

@@ -1,3 +1,5 @@
+package object;
+
 public class Location {
     private int x;
     private Integer y; //Поле не может быть null

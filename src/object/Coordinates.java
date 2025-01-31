@@ -1,3 +1,5 @@
+package object;
+
 public class Coordinates {
     private double x; //Значение поля должно быть больше -645
     private Long y; //Поле не может быть null
