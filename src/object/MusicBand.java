@@ -26,4 +26,29 @@ public class MusicBand {
     public long getId() {
         return this.id;
     }
+
+    public int getAlbumsCount() {
+        return albumsCount;
+    }
+
+    public int getNumberOfParticipants() {
+        return numberOfParticipants;
+    }
+
+    public Person getFrontMan() {
+        return frontMan;
+    }
+
+    @Override
+    public String toString() {
+        return "Музыкальная группа" +
+                ": id=" + id +
+                ", название - " + name +
+                ", координаты - " + coordinates +
+                ", дата создания - " + creationDate +
+                ", количество участников - " + numberOfParticipants +
+                ", количество альбомов - " + albumsCount +
+                ", жанр - " + genre +
+                ", фронтмен - " + frontMan;
+    }
 }
