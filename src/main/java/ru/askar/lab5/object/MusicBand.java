@@ -1,4 +1,4 @@
-package object;
+package ru.askar.lab5.object;
 
 public class MusicBand {
     private static long nextId = 1; // Для автоинкремента

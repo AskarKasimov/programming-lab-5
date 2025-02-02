@@ -1,6 +1,6 @@
-package command;
+package ru.askar.lab5.command;
 
-import cli.CommandExecutor;
+import ru.askar.lab5.cli.CommandExecutor;
 
 public class HelpCommand implements Command{
     private final CommandExecutor executor;

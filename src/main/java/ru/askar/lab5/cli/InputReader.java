@@ -1,4 +1,4 @@
-package cli;
+package ru.askar.lab5.cli;
 
 public class InputReader {
     public static ParsedCommand readCommand(String input) {

@@ -1,4 +1,4 @@
-package object;
+package ru.askar.lab5.object;
 
 import java.util.Objects;
 

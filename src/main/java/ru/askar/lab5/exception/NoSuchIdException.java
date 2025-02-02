@@ -1,4 +1,4 @@
-package exception;
+package ru.askar.lab5.exception;
 
 public class NoSuchIdException extends Exception {
     public NoSuchIdException() {

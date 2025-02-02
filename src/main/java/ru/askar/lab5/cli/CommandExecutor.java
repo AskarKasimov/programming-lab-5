@@ -1,6 +1,6 @@
-package cli;
+package ru.askar.lab5.cli;
 
-import command.Command;
+import ru.askar.lab5.command.Command;
 
 import java.util.HashMap;
 import java.util.Map;

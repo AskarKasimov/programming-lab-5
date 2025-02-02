@@ -1,7 +1,10 @@
-import cli.CommandExecutor;
-import cli.CommandParser;
-import command.HelpCommand;
-import command.InfoCommand;
+package ru.askar.lab5;
+
+
+import ru.askar.lab5.cli.CommandExecutor;
+import ru.askar.lab5.cli.CommandParser;
+import ru.askar.lab5.command.HelpCommand;
+import ru.askar.lab5.command.InfoCommand;
 
 public class Main {
     public static void main(String[] args) {
@@ -11,6 +14,6 @@ public class Main {
         commandExecutor.register(new InfoCommand());
         commandExecutor.register(new HelpCommand(commandExecutor));
 
-
+        System.out.println("Hello, Maven!");
     }
 }

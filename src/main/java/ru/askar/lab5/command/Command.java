@@ -1,4 +1,4 @@
-package command;
+package ru.askar.lab5.command;
 
 public interface Command {
     void execute(String[] args); // Выполнить команду

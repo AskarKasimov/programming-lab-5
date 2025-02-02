@@ -1,6 +1,8 @@
-package cli;
+package ru.askar.lab5.cli;
 
-import exception.InvalidCommandException;
+
+
+import ru.askar.lab5.exception.InvalidCommandException;
 
 import java.util.Arrays;
 

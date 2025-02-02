@@ -1,6 +1,6 @@
-package command;
+package ru.askar.lab5.command;
 
-public class InfoCommand implements Command{
+public class InfoCommand implements Command {
 
     @Override
     public void execute(String[] args) {

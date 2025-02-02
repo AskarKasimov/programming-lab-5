@@ -1,8 +1,8 @@
-package collection;
+package ru.askar.lab5.collection;
 
-import exception.NoSuchIdException;
-import object.MusicBand;
-import object.Person;
+import ru.askar.lab5.exception.NoSuchIdException;
+import ru.askar.lab5.object.MusicBand;
+import ru.askar.lab5.object.Person;
 
 import java.util.Collections;
 import java.util.LinkedList;
