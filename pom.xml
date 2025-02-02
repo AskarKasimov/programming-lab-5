@@ -31,7 +31,7 @@
                     <target>17</target>
                 </configuration>
             </plugin>
-            <plugin>
+            <plugin> <!-- Добавлено для создания исполняемого jar-файла -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.2.2</version>

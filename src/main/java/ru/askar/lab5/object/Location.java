@@ -3,10 +3,17 @@ package ru.askar.lab5.object;
 import java.util.Objects;
 
 public class Location {
-    private int x;
-    private Integer y; //Поле не может быть null
-    private long z;
-    private String name; //Поле может быть null
+    private final int x;
+    private final Integer y; //Поле не может быть null
+    private final long z;
+    private final String name; //Поле может быть null
+
+    public Location(int x, Integer y, long z, String name) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.name = name;
+    }
 
     @Override
     public boolean equals(Object o) {
