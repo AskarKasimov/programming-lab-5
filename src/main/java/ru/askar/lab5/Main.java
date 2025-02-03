@@ -32,6 +32,7 @@ public class Main {
         commandExecutor.register(new ShuffleCommand());
         commandExecutor.register(new ReorderCommand());
         commandExecutor.register(new ExitCommand());
+        commandExecutor.register(new RemoveIndexCommand());
 
         InputReader inputReader = new InputReader(commandExecutor, commandParser);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
