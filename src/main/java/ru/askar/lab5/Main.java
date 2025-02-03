@@ -22,17 +22,22 @@ public class Main {
         CommandExecutor commandExecutor = new CommandExecutor(outputWriter);
         CommandParser commandParser = new CommandParser();
 
-        commandExecutor.register(new InfoCommand());
         commandExecutor.register(new HelpCommand(commandExecutor));
-        commandExecutor.register(new AppendCommand());
-        commandExecutor.register(new SaveCommand());
+        commandExecutor.register(new InfoCommand());
         commandExecutor.register(new ShowCommand());
-        commandExecutor.register(new RemoveCommand());
+//        commandExecutor.register(new AddCommand());
+//        commandExecutor.register(new UpdateCommand());
+        commandExecutor.register(new RemoveByIdCommand());
         commandExecutor.register(new ClearCommand());
+        commandExecutor.register(new SaveCommand());
+        commandExecutor.register(new ScriptCommand());
+        commandExecutor.register(new ExitCommand());
+        commandExecutor.register(new RemoveByIndexCommand());
         commandExecutor.register(new ShuffleCommand());
         commandExecutor.register(new ReorderCommand());
-        commandExecutor.register(new ExitCommand());
-        commandExecutor.register(new RemoveIndexCommand());
+//        commandExecutor.register(new RemoveByFrontManCommand());
+        commandExecutor.register(new CountByNumberOfParticipantsCommand());
+        commandExecutor.register(new FilterByAlbumsCountCommand());
 
         InputReader inputReader = new InputReader(commandExecutor, commandParser);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));

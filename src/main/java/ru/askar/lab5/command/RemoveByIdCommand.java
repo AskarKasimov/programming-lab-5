@@ -3,8 +3,8 @@ package ru.askar.lab5.command;
 import ru.askar.lab5.collection.CollectionStorage;
 import ru.askar.lab5.exception.NoSuchIdException;
 
-public class RemoveCommand extends Command {
-    public RemoveCommand() {
+public class RemoveByIdCommand extends Command {
+    public RemoveByIdCommand() {
         super("remove_by_id");
     }
 

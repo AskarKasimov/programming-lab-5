@@ -2,8 +2,8 @@ package ru.askar.lab5.command;
 
 import ru.askar.lab5.collection.CollectionStorage;
 
-public class RemoveIndexCommand extends Command {
-    public RemoveIndexCommand() {
+public class RemoveByIndexCommand extends Command {
+    public RemoveByIndexCommand() {
         super("remove_at");
     }
 

@@ -3,8 +3,8 @@ package ru.askar.lab5.command;
 import ru.askar.lab5.collection.CollectionStorage;
 import ru.askar.lab5.object.*;
 
-public class AppendCommand extends Command {
-    public AppendCommand() {
+public class AddCommand extends Command {
+    public AddCommand() {
         super("add");
     }
 

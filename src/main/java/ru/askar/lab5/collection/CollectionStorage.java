@@ -50,16 +50,6 @@ public class CollectionStorage {
 //        collection.removeIf(item -> item.getFrontMan().equals(frontMan));
 //    }
 //
-//    public int countByNumberOfParticipants(int numberOfParticipants) {
-//        int count = 0;
-//        for (MusicBand item : collection) {
-//            if (item.getNumberOfParticipants() == numberOfParticipants) {
-//                count++;
-//            }
-//        }
-//        return count;
-//    }
-//
 //    public String filterByAlbumsCount(int albumsCount) {
 //        StringBuilder result = new StringBuilder();
 //        for (MusicBand item : collection) {
