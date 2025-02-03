@@ -30,7 +30,7 @@ public class Main {
         commandExecutor.register(new RemoveByIdCommand());
         commandExecutor.register(new ClearCommand());
         commandExecutor.register(new SaveCommand());
-        commandExecutor.register(new ScriptCommand());
+        commandExecutor.register(new ScriptCommand(commandExecutor, commandParser));
         commandExecutor.register(new ExitCommand());
         commandExecutor.register(new RemoveByIndexCommand());
         commandExecutor.register(new ShuffleCommand());

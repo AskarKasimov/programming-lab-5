@@ -27,7 +27,7 @@ public class CommandExecutor {
     public Command getCommand(String name) throws NoSuchCommandException {
         Command command = commands.get(name);
         if (command == null) {
-            throw new NoSuchCommandException();
+            throw new NoSuchCommandException(name);
         }
         return commands.get(name);
     }

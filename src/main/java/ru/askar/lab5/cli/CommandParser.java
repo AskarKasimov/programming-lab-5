@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 public class CommandParser {
     public ParsedCommand parse(String[] args) throws InvalidCommandException {
-        if (args.length == 0) {
+        if (args.length == 0 || args[0].isEmpty()) {
             throw new InvalidCommandException("Команда не указана");
         }
         String commandName = args[0];

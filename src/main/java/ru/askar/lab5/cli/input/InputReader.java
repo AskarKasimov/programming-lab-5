@@ -37,11 +37,11 @@ public class InputReader {
             } catch (CollectionIsEmptyException | NoSuchCommandException | NoSuchIdException |
                      IOException e) {
                 commandExecutor.getOutputWriter().writeOnFail(e.getMessage());
-                continue;
             } catch (ExitCLIException e) {
                 break;
+            } finally {
+                System.out.print("> ");
             }
-            System.out.print("> ");
         }
     }
 }
