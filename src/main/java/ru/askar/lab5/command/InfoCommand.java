@@ -12,7 +12,6 @@ public class InfoCommand extends Command {
         outputWriter.writeOnSuccess("Тип коллекции: " + CollectionStorage.getInstance().getCollection().getClass());
         outputWriter.writeOnSuccess("Дата инициализации: " + CollectionStorage.getInstance().getDateOfCreation());
         outputWriter.writeOnSuccess("Количество элементов: " + CollectionStorage.getInstance().getCollection().size());
-        // TODO: реализовать вывод информации о коллекции
     }
 
     @Override

@@ -10,10 +10,8 @@ public class RemoveByIndexCommand extends Command {
     @Override
     public void execute(String[] args) {
         int index = Integer.parseInt(args[0]);
-        if (index < 0 || index >= CollectionStorage.getInstance().getCollection().size()) {
-            outputWriter.writeOnFail("Индекс выходит за границы коллекции");
-            return;
-        }
+        if (index < 0 || index >= CollectionStorage.getInstance().getCollection().size())
+            throw new IndexOutOfBoundsException();
         CollectionStorage.getInstance().getCollection().remove(index);
         outputWriter.writeOnSuccess("Элемент удален");
     }

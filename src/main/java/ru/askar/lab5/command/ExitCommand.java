@@ -1,5 +1,7 @@
 package ru.askar.lab5.command;
 
+import ru.askar.lab5.exception.ExitCLIException;
+
 import java.io.IOException;
 
 public class ExitCommand extends Command {
@@ -8,9 +10,8 @@ public class ExitCommand extends Command {
     }
 
     @Override
-    public void execute(String[] args) throws IOException {
-        outputWriter.writeOnSuccess("Выход");
-        throw new IOException("Выход");
+    public void execute(String[] args) throws IOException, ExitCLIException {
+        throw new ExitCLIException();
     }
 
     @Override

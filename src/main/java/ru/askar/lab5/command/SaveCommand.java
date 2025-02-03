@@ -15,7 +15,7 @@ public class SaveCommand extends Command {
     }
 
     @Override
-    public void execute(String[] args) {
+    public void execute(String[] args) throws IOException {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
@@ -23,12 +23,9 @@ public class SaveCommand extends Command {
 
         String filePath = args[0];
         // TODO: обрабатывать ситуации с неправильным количеством аргументов
-        try (FileWriter writer = new FileWriter(filePath)) {
-            gson.toJson(CollectionStorage.getInstance().getCollection(), writer); // Преобразуем коллекцию в JSON и записываем в файл
-            outputWriter.writeOnSuccess("Коллекция успешно записана в файл: " + filePath);
-        } catch (IOException e) {
-            outputWriter.writeOnFail("Ошибка при записи коллекции в файл: " + e.getMessage());
-        }
+        FileWriter writer = new FileWriter(filePath);
+        gson.toJson(CollectionStorage.getInstance().getCollection(), writer); // Преобразуем коллекцию в JSON и записываем в файл
+        outputWriter.writeOnSuccess("Коллекция успешно записана в файл: " + filePath);
     }
 
     @Override

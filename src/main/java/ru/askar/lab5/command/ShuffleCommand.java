@@ -1,6 +1,7 @@
 package ru.askar.lab5.command;
 
 import ru.askar.lab5.collection.CollectionStorage;
+import ru.askar.lab5.exception.CollectionIsEmptyException;
 
 import java.util.Collections;
 
@@ -10,9 +11,9 @@ public class ShuffleCommand extends Command {
     }
 
     @Override
-    public void execute(String[] args) {
+    public void execute(String[] args) throws CollectionIsEmptyException {
         if (CollectionStorage.getInstance().getCollection().isEmpty())
-            outputWriter.writeOnFail("Коллекция пуста");
+            throw new CollectionIsEmptyException();
         else {
             Collections.shuffle(CollectionStorage.getInstance().getCollection());
             outputWriter.writeOnSuccess("Коллекция перемешана");

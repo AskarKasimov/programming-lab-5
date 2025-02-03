@@ -1,6 +1,7 @@
 package ru.askar.lab5.command;
 
 import ru.askar.lab5.collection.CollectionStorage;
+import ru.askar.lab5.exception.CollectionIsEmptyException;
 
 public class ShowCommand extends Command {
     public ShowCommand() {
@@ -8,9 +9,9 @@ public class ShowCommand extends Command {
     }
 
     @Override
-    public void execute(String[] args) {
+    public void execute(String[] args) throws CollectionIsEmptyException {
         if (CollectionStorage.getInstance().getCollection().isEmpty())
-            outputWriter.writeOnFail("Коллекция пуста");
+            throw new CollectionIsEmptyException();
         else
             CollectionStorage.getInstance().getCollection().forEach(band -> outputWriter.writeOnSuccess(band.toString()));
     }
