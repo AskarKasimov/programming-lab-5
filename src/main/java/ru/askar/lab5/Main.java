@@ -10,11 +10,13 @@ import ru.askar.lab5.command.AppendCommand;
 import ru.askar.lab5.command.HelpCommand;
 import ru.askar.lab5.command.InfoCommand;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 
 public class Main {
-    public static void main(String[] args) throws UnsupportedEncodingException {
+    public static void main(String[] args) throws IOException {
         System.setOut(new PrintStream(System.out, true, "CP1251"));
 
         OutputWriter outputWriter = new Stdout();
@@ -26,7 +28,8 @@ public class Main {
         commandExecutor.register(new HelpCommand(commandExecutor));
         commandExecutor.register(new AppendCommand());
 
-        InputReader inputReader = new InputReader();
-        inputReader.process(commandExecutor, commandParser);
+        InputReader inputReader = new InputReader(commandExecutor, commandParser);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        inputReader.process(bufferedReader);
     }
 }

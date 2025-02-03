@@ -8,36 +8,43 @@ import ru.askar.lab5.exception.NoSuchCommandException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class InputReader {
-    public void process(CommandExecutor commandExecutor, CommandParser commandParser) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
-            commandExecutor.getOutputWriter().writeOnSuccess("CLI запущен. Введите команду (или 'exit' для выхода):");
+    private final CommandExecutor commandExecutor;
+    private final CommandParser commandParser;
 
-            String line;
-            System.out.print("> ");
-            while ((line = reader.readLine()) != null) {
-                ParsedCommand parsedCommand;
-                try {
-                    parsedCommand = commandParser.parse(line.split(" "));
-                } catch (InvalidCommandException e) {
-                    commandExecutor.getOutputWriter().writeOnFail(e.getMessage());
-                    continue;
-                }
-                if (parsedCommand.name().equals("exit")) {
-                    break;
-                }
+    public InputReader(CommandExecutor commandExecutor, CommandParser commandParser) {
+        this.commandExecutor = commandExecutor;
+        this.commandParser = commandParser;
+    }
 
-                try {
-                    commandExecutor.getCommand(line).execute(parsedCommand.args());
-                } catch (NoSuchCommandException e) {
-                    commandExecutor.getOutputWriter().writeOnFail(e.getMessage());
-                }
-                System.out.print("> ");
+    public void process(BufferedReader reader) throws IOException {
+        String line;
+        System.out.print("> ");
+        while ((line = reader.readLine()) != null) {
+            try {
+                executeLine(line);
+            } catch (InvalidCommandException e) {
+                commandExecutor.getOutputWriter().writeOnFail(e.getMessage());
+                continue;
+            } catch (IOException e) {
+                break;
             }
-        } catch (IOException e) {
-            System.err.println("Ошибка при чтении ввода: " + e.getMessage());
+            System.out.print("> ");
+        }
+    }
+
+    private void executeLine(String line) throws IOException, InvalidCommandException {
+        ParsedCommand parsedCommand;
+        parsedCommand = commandParser.parse(line.split(" "));
+        if (parsedCommand.name().equals("exit")) {
+            throw new IOException("Команда выхода");
+        }
+
+        try {
+            commandExecutor.getCommand(line).execute(parsedCommand.args());
+        } catch (NoSuchCommandException e) {
+            commandExecutor.getOutputWriter().writeOnFail(e.getMessage());
         }
     }
 }
