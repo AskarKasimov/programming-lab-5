@@ -29,6 +29,9 @@ public class Main {
         commandExecutor.register(new ShowCommand());
         commandExecutor.register(new RemoveCommand());
         commandExecutor.register(new ClearCommand());
+        commandExecutor.register(new ShuffleCommand());
+        commandExecutor.register(new ReorderCommand());
+        commandExecutor.register(new ExitCommand());
 
         InputReader inputReader = new InputReader(commandExecutor, commandParser);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));

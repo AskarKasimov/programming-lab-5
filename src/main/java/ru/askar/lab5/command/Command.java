@@ -4,6 +4,8 @@ import ru.askar.lab5.cli.output.OutputWriter;
 import ru.askar.lab5.exception.CantChangeOutputWriterException;
 import ru.askar.lab5.exception.NoSuchIdException;
 
+import java.io.IOException;
+
 public abstract class Command {
     protected final String name;
     protected OutputWriter outputWriter;
@@ -12,7 +14,7 @@ public abstract class Command {
         this.name = name;
     }
 
-    public abstract void execute(String[] args) throws NoSuchIdException;
+    public abstract void execute(String[] args) throws NoSuchIdException, IOException;
 
     public abstract String getInfo(); // Получить информацию о команде
 

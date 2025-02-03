@@ -38,10 +38,6 @@ public class InputReader {
     private void executeLine(String line) throws IOException, InvalidCommandException {
         ParsedCommand parsedCommand;
         parsedCommand = commandParser.parse(line.split(" "));
-        if (parsedCommand.name().equals("exit")) {
-            throw new IOException("Команда выхода");
-        }
-
         try {
             commandExecutor.getCommand(parsedCommand.name()).execute(parsedCommand.args());
         } catch (NoSuchCommandException | NoSuchIdException e) {

@@ -46,13 +46,6 @@ public class CollectionStorage {
         this.collection = gson.fromJson(reader, new TypeToken<LinkedList<MusicBand>>() {
         }.getType());
     }
-//
-//    public void removeById(long id) throws NoSuchIdException {
-//        if (!collection.removeIf(item -> item.getId() == id)) {
-//            throw new NoSuchIdException();
-//        }
-//    }
-//
 //    public void removeByFrontMan(Person frontMan) {
 //        collection.removeIf(item -> item.getFrontMan().equals(frontMan));
 //    }
@@ -83,10 +76,6 @@ public class CollectionStorage {
 //                item = newMusicBand;
 //            }
 //        });
-//    }
-//
-//    public void shuffle() {
-//        Collections.shuffle(collection);
 //    }
 //
 //    public void reorder() {
