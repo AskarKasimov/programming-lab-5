@@ -1,14 +1,19 @@
 package ru.askar.lab5.collection;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import ru.askar.lab5.object.MusicBand;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 
 public class CollectionStorage {
     private static CollectionStorage instance;
     private final java.time.LocalDateTime dateOfCreation;
-    private final LinkedList<MusicBand> collection;
+    private LinkedList<MusicBand> collection;
     // TODO: поменять LinkedList под вариант
 
     private CollectionStorage() {
@@ -29,6 +34,17 @@ public class CollectionStorage {
 
     public LinkedList<MusicBand> getCollection() {
         return getInstance().collection;
+    }
+
+    public void loadFromFile(String filePath) throws IOException {
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .create();
+
+        FileReader reader = new FileReader(filePath);
+        this.collection = gson.fromJson(reader, new TypeToken<LinkedList<MusicBand>>() {
+        }.getType());
     }
 //
 //    public void removeById(long id) throws NoSuchIdException {

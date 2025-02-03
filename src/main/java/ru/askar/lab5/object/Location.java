@@ -3,10 +3,10 @@ package ru.askar.lab5.object;
 import java.util.Objects;
 
 public class Location {
-    private final int x;
-    private final Integer y; //Поле не может быть null
-    private final long z;
-    private final String name; //Поле может быть null
+    private int x;
+    private Integer y; //Поле не может быть null
+    private long z;
+    private String name; //Поле может быть null
 
     public Location(int x, Integer y, long z, String name) {
         this.x = x;
@@ -30,9 +30,41 @@ public class Location {
     @Override
     public String toString() {
         return "Локация" +
-                ": x =" + x +
-                ", y =" + y +
-                ", z =" + z +
+                ": x=" + x +
+                ", y=" + y +
+                ", z=" + z +
                 ", название - " + name;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public Integer getY() {
+        return y;
+    }
+
+    public void setY(Integer y) {
+        this.y = y;
+    }
+
+    public long getZ() {
+        return z;
+    }
+
+    public void setZ(long z) {
+        this.z = z;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -1,8 +1,8 @@
 package ru.askar.lab5.object;
 
 public class Coordinates {
-    private final double x; //Значение поля должно быть больше -645
-    private final Long y; //Поле не может быть null
+    private double x; //Значение поля должно быть больше -645
+    private Long y; //Поле не может быть null
 
     public Coordinates(double x, Long y) {
         if (x <= -645) {
@@ -20,5 +20,21 @@ public class Coordinates {
         return "Координаты" +
                 ": x=" + x +
                 ", y=" + y;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public Long getY() {
+        return y;
+    }
+
+    public void setY(Long y) {
+        this.y = y;
     }
 }

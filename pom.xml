@@ -10,10 +10,12 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>CP1251</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>CP1251</project.reporting.outputEncoding>
     </properties>
 
     <dependencies>
-        <dependency>
+        <dependency> <!-- JSON -->
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.12.1</version>
@@ -31,7 +33,7 @@
                     <target>17</target>
                 </configuration>
             </plugin>
-            <plugin> <!-- Добавлено для создания исполняемого jar-файла -->
+            <plugin> <!-- Создание исполняемого jar-файла -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.2.2</version>
@@ -41,6 +43,21 @@
                             <mainClass>ru.askar.lab5.Main</mainClass>
                         </manifest>
                     </archive>
+                </configuration>
+            </plugin>
+            <plugin> <!-- Плагин для запуска после сборки -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>ru.askar.lab5.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>

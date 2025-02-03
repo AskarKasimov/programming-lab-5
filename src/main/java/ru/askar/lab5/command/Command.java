@@ -2,6 +2,7 @@ package ru.askar.lab5.command;
 
 import ru.askar.lab5.cli.output.OutputWriter;
 import ru.askar.lab5.exception.CantChangeOutputWriterException;
+import ru.askar.lab5.exception.NoSuchIdException;
 
 public abstract class Command {
     protected final String name;
@@ -11,7 +12,7 @@ public abstract class Command {
         this.name = name;
     }
 
-    public abstract void execute(String[] args); // Выполнить команду
+    public abstract void execute(String[] args) throws NoSuchIdException;
 
     public abstract String getInfo(); // Получить информацию о команде
 

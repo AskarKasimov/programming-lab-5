@@ -5,6 +5,7 @@ import ru.askar.lab5.cli.CommandParser;
 import ru.askar.lab5.cli.ParsedCommand;
 import ru.askar.lab5.exception.InvalidCommandException;
 import ru.askar.lab5.exception.NoSuchCommandException;
+import ru.askar.lab5.exception.NoSuchIdException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -42,8 +43,8 @@ public class InputReader {
         }
 
         try {
-            commandExecutor.getCommand(line).execute(parsedCommand.args());
-        } catch (NoSuchCommandException e) {
+            commandExecutor.getCommand(parsedCommand.name()).execute(parsedCommand.args());
+        } catch (NoSuchCommandException | NoSuchIdException e) {
             commandExecutor.getOutputWriter().writeOnFail(e.getMessage());
         }
     }
