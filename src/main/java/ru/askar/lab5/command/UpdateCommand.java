@@ -2,7 +2,7 @@ package ru.askar.lab5.command;
 
 public class UpdateCommand extends Command {
     public UpdateCommand() {
-        super("update");
+        super("update", 6);
     }
 
     @Override

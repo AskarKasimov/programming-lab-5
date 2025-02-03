@@ -2,7 +2,7 @@ package ru.askar.lab5.command;
 
 public class ScriptCommand extends Command {
     public ScriptCommand() {
-        super("execute_script");
+        super("execute_script", 1);
     }
 
     @Override

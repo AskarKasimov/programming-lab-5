@@ -4,7 +4,7 @@ import ru.askar.lab5.collection.CollectionStorage;
 
 public class InfoCommand extends Command {
     public InfoCommand() {
-        super("info");
+        super("info", 0);
     }
 
     @Override

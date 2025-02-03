@@ -29,6 +29,10 @@ public class InputReader {
                     commandExecutor.getOutputWriter().writeOnFail(e.getMessage());
                     continue;
                 }
+                if (parsedCommand.args().length != commandExecutor.getCommand(parsedCommand.name()).getArgsCount()) {
+                    commandExecutor.getOutputWriter().writeOnFail("Неверное количество аргументов: для команды " + parsedCommand.name() + " требуется " + commandExecutor.getCommand(parsedCommand.name()).getArgsCount());
+                    continue;
+                }
                 commandExecutor.getCommand(parsedCommand.name()).execute(parsedCommand.args());
             } catch (CollectionIsEmptyException | NoSuchCommandException | NoSuchIdException |
                      IOException e) {

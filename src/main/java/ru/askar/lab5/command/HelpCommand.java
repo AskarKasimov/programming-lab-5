@@ -6,7 +6,7 @@ public class HelpCommand extends Command {
     private final CommandExecutor executor;
 
     public HelpCommand(CommandExecutor executor) {
-        super("help");
+        super("help", 0);
         this.executor = executor;
     }
 

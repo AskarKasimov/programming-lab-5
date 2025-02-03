@@ -2,6 +2,6 @@ package ru.askar.lab5.exception;
 
 public class CollectionIsEmptyException extends Exception {
     public CollectionIsEmptyException() {
-        super("Коллекция пуста");
+        super("РљРѕР»Р»РµРєС†РёСЏ РїСѓСЃС‚Р°");
     }
 }

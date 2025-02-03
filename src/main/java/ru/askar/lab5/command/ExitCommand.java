@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class ExitCommand extends Command {
     public ExitCommand() {
-        super("exit");
+        super("exit", 0);
     }
 
     @Override

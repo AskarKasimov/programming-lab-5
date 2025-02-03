@@ -5,7 +5,7 @@ import ru.askar.lab5.exception.CollectionIsEmptyException;
 
 public class ShowCommand extends Command {
     public ShowCommand() {
-        super("show");
+        super("show", 0);
     }
 
     @Override

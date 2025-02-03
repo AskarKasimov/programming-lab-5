@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 public class SaveCommand extends Command {
     public SaveCommand() {
-        super("save");
+        super("save", 1);
     }
 
     @Override

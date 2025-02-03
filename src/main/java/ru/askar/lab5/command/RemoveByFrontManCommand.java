@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class RemoveByFrontManCommand extends Command {
     public RemoveByFrontManCommand() {
-        super("remove_any_by_front_man");
+        super("remove_any_by_front_man", 6);
     }
 
     @Override

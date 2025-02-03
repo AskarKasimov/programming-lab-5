@@ -5,7 +5,7 @@ import ru.askar.lab5.object.*;
 
 public class AddCommand extends Command {
     public AddCommand() {
-        super("add");
+        super("add", 6);
     }
 
     @Override

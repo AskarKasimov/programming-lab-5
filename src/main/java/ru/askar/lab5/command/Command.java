@@ -9,11 +9,13 @@ import ru.askar.lab5.exception.NoSuchIdException;
 import java.io.IOException;
 
 public abstract class Command {
+    protected final int argsCount;
     protected final String name;
     protected OutputWriter outputWriter;
 
-    public Command(String name) {
+    public Command(String name, int argsCount) {
         this.name = name;
+        this.argsCount = argsCount;
     }
 
     public abstract void execute(String[] args) throws NoSuchIdException, IOException, CollectionIsEmptyException, ExitCLIException;
@@ -22,6 +24,10 @@ public abstract class Command {
 
     public String getName() {
         return name;
+    }
+
+    public int getArgsCount() {
+        return argsCount;
     }
 
     public void setOutputWriter(OutputWriter newOutputWriter) {

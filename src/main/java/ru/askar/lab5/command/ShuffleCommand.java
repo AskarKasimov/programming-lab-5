@@ -7,7 +7,7 @@ import java.util.Collections;
 
 public class ShuffleCommand extends Command {
     public ShuffleCommand() {
-        super("shuffle");
+        super("shuffle", 0);
     }
 
     @Override

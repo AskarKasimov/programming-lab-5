@@ -5,7 +5,7 @@ import ru.askar.lab5.exception.NoSuchIdException;
 
 public class RemoveByIdCommand extends Command {
     public RemoveByIdCommand() {
-        super("remove_by_id");
+        super("remove_by_id", 1);
     }
 
     @Override

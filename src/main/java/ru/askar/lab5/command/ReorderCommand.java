@@ -7,7 +7,7 @@ import java.util.Collections;
 
 public class ReorderCommand extends Command {
     public ReorderCommand() {
-        super("reorder");
+        super("reorder", 0);
     }
 
     @Override

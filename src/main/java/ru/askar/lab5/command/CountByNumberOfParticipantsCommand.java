@@ -5,7 +5,7 @@ import ru.askar.lab5.object.MusicBand;
 
 public class CountByNumberOfParticipantsCommand extends Command {
     public CountByNumberOfParticipantsCommand() {
-        super("count_by_number_of_participants");
+        super("count_by_number_of_participants", 1);
     }
 
     @Override

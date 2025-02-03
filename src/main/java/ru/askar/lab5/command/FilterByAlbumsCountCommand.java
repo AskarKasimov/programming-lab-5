@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class FilterByAlbumsCountCommand extends Command {
     public FilterByAlbumsCountCommand() {
-        super("filter_by_albums_count");
+        super("filter_by_albums_count", 1);
     }
 
     @Override

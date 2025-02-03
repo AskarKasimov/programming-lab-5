@@ -5,7 +5,7 @@ import ru.askar.lab5.exception.CollectionIsEmptyException;
 
 public class ClearCommand extends Command {
     public ClearCommand() {
-        super("clear");
+        super("clear", 0);
     }
 
     @Override

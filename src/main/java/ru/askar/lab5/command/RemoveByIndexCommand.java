@@ -4,7 +4,7 @@ import ru.askar.lab5.collection.CollectionStorage;
 
 public class RemoveByIndexCommand extends Command {
     public RemoveByIndexCommand() {
-        super("remove_at");
+        super("remove_at", 6);
     }
 
     @Override
