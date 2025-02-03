@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 public class ScriptCommand extends Command {
     private final CommandExecutor commandExecutor;
     private final CommandParser commandParser;
+
     public ScriptCommand(CommandExecutor commandExecutor, CommandParser commandParser) {
         super("execute_script", 1);
         this.commandExecutor = commandExecutor;

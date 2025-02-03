@@ -9,10 +9,10 @@ public class Location {
     private String name; //Поле может быть null
 
     public Location(int x, Integer y, long z, String name) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.name = name;
+        setX(x);
+        setY(y);
+        setZ(z);
+        setName(name);
     }
 
     @Override
@@ -49,6 +49,9 @@ public class Location {
     }
 
     public void setY(Integer y) {
+        if (y == null) {
+            throw new IllegalArgumentException("Y не может быть null");
+        }
         this.y = y;
     }
 
@@ -65,6 +68,9 @@ public class Location {
     }
 
     public void setName(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("Название не может быть null");
+        }
         this.name = name;
     }
 }

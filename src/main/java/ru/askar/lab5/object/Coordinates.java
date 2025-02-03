@@ -5,14 +5,8 @@ public class Coordinates {
     private Long y; //Поле не может быть null
 
     public Coordinates(double x, Long y) {
-        if (x <= -645) {
-            throw new IllegalArgumentException("x must be greater than -645");
-        }
-        if (y == null) {
-            throw new IllegalArgumentException("y cannot be null");
-        }
-        this.x = x;
-        this.y = y;
+        setX(x);
+        setY(y);
     }
 
     @Override
@@ -27,6 +21,9 @@ public class Coordinates {
     }
 
     public void setX(double x) {
+        if (x <= -645) {
+            throw new IllegalArgumentException("X должен быть больше -645");
+        }
         this.x = x;
     }
 
@@ -35,6 +32,9 @@ public class Coordinates {
     }
 
     public void setY(Long y) {
+        if (y == null) {
+            throw new IllegalArgumentException("Y не может быть null");
+        }
         this.y = y;
     }
 }

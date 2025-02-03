@@ -10,11 +10,11 @@ public class Person {
     private Location location; //Поле не может быть null
 
     public Person(String name, String passportID, Color hairColor, Country nationality, Location location) {
-        this.name = name;
-        this.passportID = passportID;
-        this.hairColor = hairColor;
-        this.nationality = nationality;
-        this.location = location;
+        setName(name);
+        setPassportID(passportID);
+        setHairColor(hairColor);
+        setNationality(nationality);
+        setLocation(location);
     }
 
     @Override
@@ -44,6 +44,9 @@ public class Person {
     }
 
     public void setName(String name) {
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("Имя не может быть null или пустым");
+        }
         this.name = name;
     }
 
@@ -52,6 +55,9 @@ public class Person {
     }
 
     public void setPassportID(String passportID) {
+        if (passportID == null || passportID.length() < 6) {
+            throw new IllegalArgumentException("Паспорт не может быть null, пустым или иметь длину меньше 6");
+        }
         this.passportID = passportID;
     }
 
@@ -60,6 +66,9 @@ public class Person {
     }
 
     public void setHairColor(Color hairColor) {
+        if (hairColor == null) {
+            throw new IllegalArgumentException("Цвет волос не может быть null");
+        }
         this.hairColor = hairColor;
     }
 
@@ -76,6 +85,9 @@ public class Person {
     }
 
     public void setLocation(Location location) {
+        if (location == null) {
+            throw new IllegalArgumentException("Местоположение не может быть null");
+        }
         this.location = location;
     }
 }
