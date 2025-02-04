@@ -29,13 +29,18 @@ public class Main {
         commandExecutor.register(new InfoCommand());
         commandExecutor.register(new ShowCommand());
         commandExecutor.register(new InsertCommand(inputReader));
-        commandExecutor.register(new UpdateCommand());
+        commandExecutor.register(new UpdateCommand(inputReader));
         commandExecutor.register(new RemoveByKeyCommand());
         commandExecutor.register(new ClearCommand());
         commandExecutor.register(new SaveCommand());
         commandExecutor.register(new ScriptCommand(commandExecutor, commandParser));
         commandExecutor.register(new ExitCommand());
-        commandExecutor.register(new RemoveByIndexCommand());
+        commandExecutor.register(new RemoveLowerCommand(inputReader));
+        commandExecutor.register(new ReplaceIfGreaterCommand(inputReader));
+        commandExecutor.register(new RemoveGreaterKeyCommand());
+        commandExecutor.register(new FilterStartsWithNameCommand());
+        commandExecutor.register(new PrintFieldAscendingEventCommand());
+        commandExecutor.register(new PrintFieldDescendingTypeCommand());
 
         String filePath = System.getenv("lab5");
 
