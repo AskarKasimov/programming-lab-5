@@ -25,19 +25,14 @@ public class Main {
         commandExecutor.register(new HelpCommand(commandExecutor));
         commandExecutor.register(new InfoCommand());
         commandExecutor.register(new ShowCommand());
-//        commandExecutor.register(new AddCommand());
-//        commandExecutor.register(new UpdateCommand());
-        commandExecutor.register(new RemoveByIdCommand());
+        commandExecutor.register(new InsertCommand());
+        commandExecutor.register(new UpdateCommand());
+        commandExecutor.register(new RemoveByKeyCommand());
         commandExecutor.register(new ClearCommand());
         commandExecutor.register(new SaveCommand());
         commandExecutor.register(new ScriptCommand(commandExecutor, commandParser));
         commandExecutor.register(new ExitCommand());
         commandExecutor.register(new RemoveByIndexCommand());
-        commandExecutor.register(new ShuffleCommand());
-        commandExecutor.register(new ReorderCommand());
-//        commandExecutor.register(new RemoveByFrontManCommand());
-        commandExecutor.register(new CountByNumberOfParticipantsCommand());
-        commandExecutor.register(new FilterByAlbumsCountCommand());
 
         InputReader inputReader = new InputReader(commandExecutor, commandParser);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));

@@ -5,8 +5,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import ru.askar.lab5.object.Ticket;
 
-import java.io.FileReader;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.TreeMap;
 
@@ -36,13 +38,23 @@ public class CollectionStorage {
     }
 
     public void loadFromFile(String filePath) throws IOException {
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                .create();
+        try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(filePath))) {
+            byte[] data = bis.readAllBytes();
+            String json = new String(data, StandardCharsets.UTF_8);
 
-        FileReader reader = new FileReader(filePath);
-        this.collection = gson.fromJson(reader, new TypeToken<TreeMap<Long, Ticket>>() {
-        }.getType());
+            Gson gson = new GsonBuilder()
+                    .setPrettyPrinting()
+                    .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                    .create();
+            this.collection = gson.fromJson(json, new TypeToken<TreeMap<Long, Ticket>>() {
+            }.getType());
+            this.collection.values().forEach(ticket -> {
+                if (ticket.getId() >= Ticket.getNextId()) {
+                    Ticket.setNextId(ticket.getId() + 1);
+                }
+            });
+        } catch (IOException e) {
+            throw e;
+        }
     }
 }

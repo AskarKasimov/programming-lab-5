@@ -4,14 +4,14 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Ticket implements Comparable<Ticket> {
-    private static Long nextId = 1L; // Для автоинкремента
-    private final Long id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
-    private String name; //Поле не может быть null, Строка не может быть пустой
-    private Coordinates coordinates; //Поле не может быть null
-    private final java.time.LocalDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
-    private long price; //Значение поля должно быть больше 0
-    private TicketType type; //Поле не может быть null
-    private Event event; //Поле может быть null
+    private static Long nextId = 1L; // Р”Р»СЏ Р°РІС‚РѕРёРЅРєСЂРµРјРµРЅС‚Р°
+    private final Long id; //РџРѕР»Рµ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null, Р—РЅР°С‡РµРЅРёРµ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ 0, Р—РЅР°С‡РµРЅРёРµ СЌС‚РѕРіРѕ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СѓРЅРёРєР°Р»СЊРЅС‹Рј, Р—РЅР°С‡РµРЅРёРµ СЌС‚РѕРіРѕ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ РіРµРЅРµСЂРёСЂРѕРІР°С‚СЊСЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё
+    private final java.time.LocalDateTime creationDate; //РџРѕР»Рµ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null, Р—РЅР°С‡РµРЅРёРµ СЌС‚РѕРіРѕ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ РіРµРЅРµСЂРёСЂРѕРІР°С‚СЊСЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё
+    private String name; //РџРѕР»Рµ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null, РЎС‚СЂРѕРєР° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚РѕР№
+    private Coordinates coordinates; //РџРѕР»Рµ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null
+    private long price; //Р—РЅР°С‡РµРЅРёРµ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ 0
+    private TicketType type; //РџРѕР»Рµ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null
+    private Event event; //РџРѕР»Рµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null
 
     public Ticket(String name, Coordinates coordinates, long price, TicketType type, Event event) {
         this.id = nextId;
@@ -24,39 +24,15 @@ public class Ticket implements Comparable<Ticket> {
         setEvent(event);
     }
 
-    public void setName(String name) {
-        if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException("Имя не может быть null или пустым");
-        }
-        this.name = name;
+    public static Long getNextId() {
+        return nextId;
     }
 
-    public void setCoordinates(Coordinates coordinates) {
-        if (coordinates == null) {
-            throw new IllegalArgumentException("Координаты не могут быть null");
+    public static void setNextId(Long newNextId) {
+        if (newNextId <= 0) {
+            throw new IllegalArgumentException("ID РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ 0");
         }
-        this.coordinates = coordinates;
-    }
-
-    public void setPrice(long price) {
-        if (price <= 0) {
-            throw new IllegalArgumentException("Цена должна быть больше 0");
-        }
-        this.price = price;
-    }
-
-    public void setType(TicketType type) {
-        if (type == null) {
-            throw new IllegalArgumentException("Тип билета не может быть null");
-        }
-        this.type = type;
-    }
-
-    public void setEvent(Event event) {
-        if (event == null) {
-            throw new IllegalArgumentException("Событие не может быть null");
-        }
-        this.event = event;
+        nextId = newNextId;
     }
 
     @Override
@@ -78,14 +54,14 @@ public class Ticket implements Comparable<Ticket> {
 
     @Override
     public String toString() {
-        return "Билет" +
+        return "Р‘РёР»РµС‚" +
                 ": id=" + id +
-                ", название='" + name + "'" +
-                ", координаты=" + coordinates +
-                ", дата создания=" + creationDate +
-                ", цена=" + price +
-                ", тип=" + type +
-                ", событие=" + event + ";";
+                ", РЅР°Р·РІР°РЅРёРµ='" + name + "'" +
+                ", РєРѕРѕСЂРґРёРЅР°С‚С‹=" + coordinates +
+                ", РґР°С‚Р° СЃРѕР·РґР°РЅРёСЏ=" + creationDate +
+                ", С†РµРЅР°=" + price +
+                ", С‚РёРї=" + type +
+                ", СЃРѕР±С‹С‚РёРµ=" + event + ";";
     }
 
     public Long getId() {
@@ -96,8 +72,22 @@ public class Ticket implements Comparable<Ticket> {
         return name;
     }
 
+    public void setName(String name) {
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("РќР°Р·РІР°РЅРёРµ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null РёР»Рё РїСѓСЃС‚С‹Рј");
+        }
+        this.name = name;
+    }
+
     public Coordinates getCoordinates() {
         return coordinates;
+    }
+
+    public void setCoordinates(Coordinates coordinates) {
+        if (coordinates == null) {
+            throw new IllegalArgumentException("РљРѕРѕСЂРґРёРЅР°С‚С‹ РЅРµ РјРѕРіСѓС‚ Р±С‹С‚СЊ null");
+        }
+        this.coordinates = coordinates;
     }
 
     public LocalDateTime getCreationDate() {
@@ -108,11 +98,29 @@ public class Ticket implements Comparable<Ticket> {
         return price;
     }
 
+    public void setPrice(long price) {
+        if (price <= 0) {
+            throw new IllegalArgumentException("Р¦РµРЅР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ 0");
+        }
+        this.price = price;
+    }
+
     public TicketType getType() {
         return type;
     }
 
+    public void setType(TicketType type) {
+        if (type == null) {
+            throw new IllegalArgumentException("РўРёРї Р±РёР»РµС‚Р° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null");
+        }
+        this.type = type;
+    }
+
     public Event getEvent() {
         return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
     }
 }

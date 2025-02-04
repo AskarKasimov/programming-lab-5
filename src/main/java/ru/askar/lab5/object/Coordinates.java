@@ -11,23 +11,6 @@ public class Coordinates {
         setY(y);
     }
 
-    public void setX(Float x) {
-        if (x == null) {
-            throw new IllegalArgumentException("X не может быть null");
-        }
-        this.x = x;
-    }
-
-    public void setY(Float y) {
-        if (y == null) {
-            throw new IllegalArgumentException("Y не может быть null");
-        }
-        if (y > 654) {
-            throw new IllegalArgumentException("Y не может быть больше 654");
-        }
-        this.y = y;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -51,7 +34,24 @@ public class Coordinates {
         return x;
     }
 
+    public void setX(Float x) {
+        if (x == null) {
+            throw new IllegalArgumentException("X не может быть null");
+        }
+        this.x = x;
+    }
+
     public Float getY() {
         return y;
+    }
+
+    public void setY(Float y) {
+        if (y == null) {
+            throw new IllegalArgumentException("Y не может быть null");
+        }
+        if (y > 654) {
+            throw new IllegalArgumentException("Y не может быть больше 654");
+        }
+        this.y = y;
     }
 }

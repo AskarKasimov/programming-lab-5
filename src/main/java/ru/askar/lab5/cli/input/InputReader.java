@@ -35,7 +35,7 @@ public class InputReader {
                 }
                 commandExecutor.getCommand(parsedCommand.name()).execute(parsedCommand.args());
             } catch (CollectionIsEmptyException | NoSuchCommandException | NoSuchIdException |
-                     IOException e) {
+                     IOException | NoSuchKeyException | IllegalArgumentException e) {
                 commandExecutor.getOutputWriter().writeOnFail(e.getMessage());
             } catch (ExitCLIException e) {
                 break;

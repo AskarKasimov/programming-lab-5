@@ -13,11 +13,12 @@ public class ShowCommand extends Command {
         if (CollectionStorage.getInstance().getCollection().isEmpty())
             throw new CollectionIsEmptyException();
         else
-            CollectionStorage.getInstance().getCollection().forEach(band -> outputWriter.writeOnSuccess(band.toString()));
+            CollectionStorage.getInstance().getCollection()
+                    .forEach((id, ticket) -> outputWriter.writeOnSuccess(id + ": " + ticket.toString()));
     }
 
     @Override
     public String getInfo() {
-        return "show - вывести все элементы коллекции в строковом представлении";
+        return "вывести все элементы коллекции в строковом представлении";
     }
 }

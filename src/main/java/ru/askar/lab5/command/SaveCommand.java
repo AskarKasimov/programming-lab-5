@@ -5,8 +5,10 @@ import com.google.gson.GsonBuilder;
 import ru.askar.lab5.collection.CollectionStorage;
 import ru.askar.lab5.collection.LocalDateTimeAdapter;
 
-import java.io.FileWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
 public class SaveCommand extends Command {
@@ -22,10 +24,17 @@ public class SaveCommand extends Command {
                 .create();
 
         String filePath = args[0];
-        // TODO: обрабатывать ситуации с неправильным количеством аргументов
-        FileWriter writer = new FileWriter(filePath);
-        gson.toJson(CollectionStorage.getInstance().getCollection(), writer); // Преобразуем коллекцию в JSON и записываем в файл
-        outputWriter.writeOnSuccess("Коллекция успешно записана в файл: " + filePath);
+        String json = gson.toJson(CollectionStorage.getInstance().getCollection()); // Преобразуем коллекцию в JSON и записываем в файл
+        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+            fos.write(json.getBytes(StandardCharsets.UTF_8));
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException("Файл не найден!");
+        } catch (SecurityException e) {
+            throw new SecurityException("Недостаточно прав для записи в файл!");
+        } catch (IOException e) {
+            throw e;
+        }
+        outputWriter.writeOnSuccess("Коллекция успешно записана в файл!");
     }
 
     @Override
