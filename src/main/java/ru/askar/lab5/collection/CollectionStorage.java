@@ -3,22 +3,21 @@ package ru.askar.lab5.collection;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import ru.askar.lab5.object.MusicBand;
+import ru.askar.lab5.object.Ticket;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.LinkedList;
+import java.util.TreeMap;
 
 public class CollectionStorage {
     private static CollectionStorage instance;
-    private final java.time.LocalDateTime dateOfCreation;
-    private LinkedList<MusicBand> collection;
-    // TODO: поменять LinkedList под вариант
+    private final java.time.LocalDateTime dateOfInitialization;
+    private TreeMap<Long, Ticket> collection;
 
     private CollectionStorage() {
-        dateOfCreation = java.time.LocalDateTime.now();
-        collection = new LinkedList<>();
+        dateOfInitialization = java.time.LocalDateTime.now();
+        collection = new TreeMap<>();
     }
 
     public static CollectionStorage getInstance() {
@@ -29,10 +28,10 @@ public class CollectionStorage {
     }
 
     public LocalDateTime getDateOfCreation() {
-        return dateOfCreation;
+        return dateOfInitialization;
     }
 
-    public LinkedList<MusicBand> getCollection() {
+    public TreeMap<Long, Ticket> getCollection() {
         return getInstance().collection;
     }
 
@@ -43,50 +42,7 @@ public class CollectionStorage {
                 .create();
 
         FileReader reader = new FileReader(filePath);
-        this.collection = gson.fromJson(reader, new TypeToken<LinkedList<MusicBand>>() {
+        this.collection = gson.fromJson(reader, new TypeToken<TreeMap<Long, Ticket>>() {
         }.getType());
     }
-//    public void removeByFrontMan(Person frontMan) {
-//        collection.removeIf(item -> item.getFrontMan().equals(frontMan));
-//    }
-//
-//    public String filterByAlbumsCount(int albumsCount) {
-//        StringBuilder result = new StringBuilder();
-//        for (MusicBand item : collection) {
-//            if (item.getAlbumsCount() == albumsCount) {
-//                result.append(item).append("\n");
-//            }
-//        }
-//        return result.toString();
-//    }
-//
-//    public void updateById(long id, MusicBand newMusicBand) throws NoSuchIdException {
-//        collection.forEach(item -> {
-//            if (item.getId() == id) {
-//                item = newMusicBand;
-//            }
-//        });
-//    }
-//
-//    public void reorder() {
-//        Collections.reverse(collection);
-//    }
-//
-//    public void removeAtIndex(int index) {
-//        collection.remove(index);
-//    }
-//
-//    public void clear() {
-//        collection.clear();
-//    }
-//
-//    public void save(String path) {
-//        // TODO: реализовать сохранение коллекции в файл
-//    }
-//
-//    public String getAllElementsToString() {
-//        StringBuilder result = new StringBuilder();
-//        collection.forEach(item -> result.append(item).append("\n"));
-//        return result.toString();
-//    }
 }

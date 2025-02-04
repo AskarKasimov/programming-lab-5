@@ -42,7 +42,14 @@ public class Main {
         InputReader inputReader = new InputReader(commandExecutor, commandParser);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
-        CollectionStorage.getInstance().loadFromFile("collection.json");
+        String filePath = System.getenv("lab5");
+
+        if (filePath == null) {
+            System.out.println("Переменная окружения lab5 не установлена");
+            return;
+        }
+
+        CollectionStorage.getInstance().loadFromFile(filePath);
 
         inputReader.process(bufferedReader);
     }
