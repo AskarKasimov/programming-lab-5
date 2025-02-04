@@ -3,6 +3,7 @@ package ru.askar.lab5.collection;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import ru.askar.lab5.object.Event;
 import ru.askar.lab5.object.Ticket;
 
 import java.io.BufferedInputStream;
@@ -52,7 +53,13 @@ public class CollectionStorage {
                 if (ticket.getId() >= Ticket.getNextId()) {
                     Ticket.setNextId(ticket.getId() + 1);
                 }
+                if (ticket.getEvent() != null && ticket.getEvent().getId() >= Event.getNextId()) {
+                    Event.setNextId(ticket.getEvent().getId() + 1);
+                }
             });
+            if (this.collection == null) {
+                this.collection = new TreeMap<>();
+            }
         } catch (IOException e) {
             throw e;
         }

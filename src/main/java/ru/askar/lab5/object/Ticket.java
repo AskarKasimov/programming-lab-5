@@ -1,5 +1,8 @@
 package ru.askar.lab5.object;
 
+import ru.askar.lab5.cli.input.InputReader;
+import ru.askar.lab5.cli.output.OutputWriter;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -13,15 +16,35 @@ public class Ticket implements Comparable<Ticket> {
     private TicketType type; //Поле не может быть null
     private Event event; //Поле может быть null
 
-    public Ticket(String name, Coordinates coordinates, long price, TicketType type, Event event) {
-        this.id = nextId;
-        nextId++;
+    public Ticket(Long id, String name, Coordinates coordinates, long price, TicketType type, Event event) {
+        this.id = id;
         setName(name);
         setCoordinates(coordinates);
         this.creationDate = LocalDateTime.now();
         setPrice(price);
         setType(type);
         setEvent(event);
+    }
+
+    public Ticket(String name, Coordinates coordinates, long price, TicketType type, Event event) {
+        this(nextId++, name, coordinates, price, type, event);
+    }
+
+    public static Ticket createTicket(OutputWriter outputWriter, InputReader inputReader, Long id, String name, long price) {
+        Coordinates coordinates = Coordinates.createCoordinates(outputWriter, inputReader);
+        TicketType ticketType = TicketType.createTicketType(outputWriter, inputReader);
+        outputWriter.writeOnSuccess("Хотите ввести событие? (y/n): ");
+        if (!inputReader.getInputString().equals("y")) {
+            if (id == null) {
+                return new Ticket(name, coordinates, price, ticketType, null);
+            }
+            return new Ticket(id, name, coordinates, price, ticketType, null);
+        }
+        Event event = Event.createEvent(outputWriter, inputReader);
+        if (id == null) {
+            return new Ticket(name, coordinates, price, ticketType, event);
+        }
+        return new Ticket(id, name, coordinates, price, ticketType, event);
     }
 
     public static Long getNextId() {
@@ -54,14 +77,7 @@ public class Ticket implements Comparable<Ticket> {
 
     @Override
     public String toString() {
-        return "Билет" +
-                ": id=" + id +
-                ", название='" + name + "'" +
-                ", координаты=" + coordinates +
-                ", дата создания=" + creationDate +
-                ", цена=" + price +
-                ", тип=" + type +
-                ", событие=" + event + ";";
+        return "Билет" + ": id=" + id + ", название='" + name + "'" + ", координаты=" + coordinates + ", дата создания=" + creationDate + ", цена=" + price + ", тип=" + type + ", событие=" + event + ";";
     }
 
     public Long getId() {

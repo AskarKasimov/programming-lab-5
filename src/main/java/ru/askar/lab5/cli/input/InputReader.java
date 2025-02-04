@@ -11,16 +11,36 @@ import java.io.IOException;
 public class InputReader {
     private final CommandExecutor commandExecutor;
     private final CommandParser commandParser;
+    private final BufferedReader bufferedReader;
 
-    public InputReader(CommandExecutor commandExecutor, CommandParser commandParser) {
+    public InputReader(CommandExecutor commandExecutor, CommandParser commandParser, BufferedReader bufferedReader) {
         this.commandExecutor = commandExecutor;
         this.commandParser = commandParser;
+        this.bufferedReader = bufferedReader;
     }
 
-    public void process(BufferedReader reader) throws IOException {
+    public String getInputString() {
+        try {
+            return bufferedReader.readLine();
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Ошибка ввода");
+        }
+    }
+
+    public float getInputFloat() {
+        try {
+            return Float.parseFloat(bufferedReader.readLine());
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Требуется число с точкой");
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Ошибка ввода");
+        }
+    }
+
+    public void process() throws IOException {
         String line;
         System.out.print("> ");
-        while ((line = reader.readLine()) != null) {
+        while ((line = bufferedReader.readLine()) != null) {
             try {
                 ParsedCommand parsedCommand;
                 try {

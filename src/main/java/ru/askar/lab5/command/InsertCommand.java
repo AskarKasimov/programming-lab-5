@@ -1,24 +1,39 @@
 package ru.askar.lab5.command;
 
+import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.collection.CollectionStorage;
-import ru.askar.lab5.object.Coordinates;
 import ru.askar.lab5.object.Ticket;
-import ru.askar.lab5.object.TicketType;
 
 public class InsertCommand extends Command {
-    public InsertCommand() {
-        super("insert", 1);
+
+    InputReader inputReader;
+
+    public InsertCommand(InputReader inputReader) {
+        super("insert", 3);
+        this.inputReader = inputReader;
     }
 
     @Override
     public void execute(String[] args) {
-        Ticket ticket = new Ticket("arr", new Coordinates(1f, 1f), 1, TicketType.VIP, null);
-        CollectionStorage.getInstance().getCollection().put(Long.parseLong(args[0]), ticket);
+        Long id = null;
+        if (!args[0].equals("null")) id = Long.parseLong(args[0]);
+        String name = args[1];
+        long price = Long.parseLong(args[2]);
+        Ticket ticket = Ticket.createTicket(outputWriter, inputReader, id, name, price);
+        try {
+            if (CollectionStorage.getInstance().getCollection().containsKey(ticket.getId())) {
+                outputWriter.writeOnFail("Такой id уже существует");
+                return;
+            }
+        } catch (NullPointerException e) {
+            // ignore
+        }
+        CollectionStorage.getInstance().getCollection().put(ticket.getId(), ticket);
         outputWriter.writeOnSuccess("Элемент добавлен в коллекцию");
     }
 
     @Override
     public String getInfo() {
-        return "insert null {element} - добавить новый элемент с заданным ключом";
+        return "insert id?null name price - добавить новый элемент";
     }
 }

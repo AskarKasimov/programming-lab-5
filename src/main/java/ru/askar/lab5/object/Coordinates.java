@@ -1,5 +1,8 @@
 package ru.askar.lab5.object;
 
+import ru.askar.lab5.cli.input.InputReader;
+import ru.askar.lab5.cli.output.OutputWriter;
+
 import java.util.Objects;
 
 public class Coordinates {
@@ -9,6 +12,19 @@ public class Coordinates {
     public Coordinates(Float x, Float y) {
         setX(x);
         setY(y);
+    }
+
+    public static Coordinates createCoordinates(OutputWriter outputWriter, InputReader inputReader) {
+        Coordinates coordinates = new Coordinates((float) 0, (float) 0);
+        outputWriter.writeOnSuccess("Ввод координат");
+
+        outputWriter.writeOnSuccess("Введите координату x: ");
+        coordinates.setX(inputReader.getInputFloat());
+
+        outputWriter.writeOnSuccess("Введите координату y: ");
+        coordinates.setY(inputReader.getInputFloat());
+
+        return coordinates;
     }
 
     @Override

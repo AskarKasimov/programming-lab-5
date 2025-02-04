@@ -1,5 +1,8 @@
 package ru.askar.lab5.object;
 
+import ru.askar.lab5.cli.input.InputReader;
+import ru.askar.lab5.cli.output.OutputWriter;
+
 import java.util.Objects;
 
 public class Event implements Comparable<Event> {
@@ -15,6 +18,36 @@ public class Event implements Comparable<Event> {
         setName(name);
         setDescription(description);
         setEventType(eventType);
+    }
+
+    public static Event createEvent(OutputWriter outputWriter, InputReader inputReader) {
+        Event event = new Event(".", "", null);
+        outputWriter.writeOnSuccess("Ввод события");
+
+        outputWriter.writeOnSuccess("Введите название события: ");
+        event.setName(inputReader.getInputString());
+
+        outputWriter.writeOnSuccess("Введите описание события: ");
+        event.setDescription(inputReader.getInputString());
+
+        outputWriter.writeOnSuccess("Хотите ввести тип события? (y/n): ");
+        if (!inputReader.getInputString().equals("y")) {
+            return event;
+        }
+        event.setEventType(EventType.createEventType(outputWriter, inputReader));
+
+        return event;
+    }
+
+    public static Integer getNextId() {
+        return nextId;
+    }
+
+    public static void setNextId(Integer newNextId) {
+        if (newNextId <= 0) {
+            throw new IllegalArgumentException("ID должен быть больше 0");
+        }
+        nextId = newNextId;
     }
 
     @Override

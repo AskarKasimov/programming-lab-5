@@ -22,10 +22,13 @@ public class Main {
         CommandExecutor commandExecutor = new CommandExecutor(outputWriter);
         CommandParser commandParser = new CommandParser();
 
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        InputReader inputReader = new InputReader(commandExecutor, commandParser, bufferedReader);
+
         commandExecutor.register(new HelpCommand(commandExecutor));
         commandExecutor.register(new InfoCommand());
         commandExecutor.register(new ShowCommand());
-        commandExecutor.register(new InsertCommand());
+        commandExecutor.register(new InsertCommand(inputReader));
         commandExecutor.register(new UpdateCommand());
         commandExecutor.register(new RemoveByKeyCommand());
         commandExecutor.register(new ClearCommand());
@@ -33,9 +36,6 @@ public class Main {
         commandExecutor.register(new ScriptCommand(commandExecutor, commandParser));
         commandExecutor.register(new ExitCommand());
         commandExecutor.register(new RemoveByIndexCommand());
-
-        InputReader inputReader = new InputReader(commandExecutor, commandParser);
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
         String filePath = System.getenv("lab5");
 
@@ -46,6 +46,6 @@ public class Main {
 
         CollectionStorage.getInstance().loadFromFile(filePath);
 
-        inputReader.process(bufferedReader);
+        inputReader.process();
     }
 }

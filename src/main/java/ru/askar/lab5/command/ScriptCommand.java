@@ -24,8 +24,8 @@ public class ScriptCommand extends Command {
         FileInputStream fileInputStream = new FileInputStream(args[0]);
         InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        InputReader inputReader = new InputReader(commandExecutor, commandParser);
-        inputReader.process(bufferedReader);
+        InputReader inputReader = new InputReader(commandExecutor, commandParser, bufferedReader);
+        inputReader.process();
     }
 
     @Override
