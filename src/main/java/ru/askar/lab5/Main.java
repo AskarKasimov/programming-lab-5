@@ -44,7 +44,7 @@ public class Main {
 
         String filePath = System.getenv("lab5");
 
-        if (filePath == null) {
+        if (filePath == null || filePath.isEmpty()) {
             System.out.println("Переменная окружения lab5 не установлена");
             return;
         }
