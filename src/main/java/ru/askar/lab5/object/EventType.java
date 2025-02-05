@@ -16,7 +16,7 @@ public enum EventType {
     public static String getStringValues() {
         StringBuilder result = new StringBuilder();
         for (EventType type : values()) {
-            if (!result.isEmpty() && type.ordinal() < values().length - 1) {
+            if (!result.isEmpty() && type.ordinal() < values().length) {
                 result.append(",");
             }
             result.append(type.name());
