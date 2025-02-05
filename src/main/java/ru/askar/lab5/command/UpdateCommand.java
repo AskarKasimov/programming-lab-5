@@ -21,7 +21,12 @@ public class UpdateCommand extends Command {
             return;
         }
         String name = args[1];
-        long price = Long.parseLong(args[2]);
+        long price;
+        try {
+            price = Long.parseLong(args[2]);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("В поле price требуется число");
+        }
         outputWriter.writeOnSuccess("Хотите изменить прочие данные? (y/n): ");
         if (inputReader.getInputString().equals("y")) {
             Ticket newTicket = Ticket.createTicket(outputWriter, inputReader, id, name, price);

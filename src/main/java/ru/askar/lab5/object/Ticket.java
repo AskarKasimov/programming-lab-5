@@ -26,7 +26,7 @@ public class Ticket implements Comparable<Ticket> {
      * @throws IllegalArgumentException - если данный id невозможен
      */
     public Ticket(Long id, String name, Coordinates coordinates, long price, TicketType type, Event event) {
-        if (id < nextId) throw new IllegalArgumentException("Билет с таким id уже был");
+//        if (id < nextId) throw new IllegalArgumentException("Билет с таким id уже был");
         this.id = id;
         setName(name);
         setCoordinates(coordinates);

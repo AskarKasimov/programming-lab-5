@@ -15,7 +15,7 @@ public enum TicketType {
     public static String getStringValues() {
         StringBuilder result = new StringBuilder();
         for (TicketType type : values()) {
-            if (!result.isEmpty() && type.ordinal() < values().length - 1) {
+            if (!result.isEmpty() && type.ordinal() < values().length) {
                 result.append(",");
             }
             result.append(type.name());

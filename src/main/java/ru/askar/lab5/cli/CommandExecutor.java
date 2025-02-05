@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class CommandExecutor {
     private final OutputWriter outputWriter;
-    private final Map<String, Command> commands = new LinkedHashMap<>();
+    private final LinkedHashMap<String, Command> commands = new LinkedHashMap<>();
 
     /**
      * Создание реестра команд с регистрацией способа вывода.
