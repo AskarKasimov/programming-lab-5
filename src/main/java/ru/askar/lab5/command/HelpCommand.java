@@ -2,6 +2,9 @@ package ru.askar.lab5.command;
 
 import ru.askar.lab5.cli.CommandExecutor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HelpCommand extends Command {
     private final CommandExecutor executor;
 
@@ -12,7 +15,8 @@ public class HelpCommand extends Command {
 
     @Override
     public void execute(String[] args) {
-        executor.getAllCommands().values().forEach(command -> outputWriter.writeOnSuccess(command.getInfo()));
+        List<Command> commands = new ArrayList<>(executor.getAllCommands().values());
+        commands.forEach(command -> outputWriter.writeOnSuccess(command.getInfo()));
     }
 
     @Override

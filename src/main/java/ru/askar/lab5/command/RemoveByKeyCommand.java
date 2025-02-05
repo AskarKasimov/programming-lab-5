@@ -1,7 +1,6 @@
 package ru.askar.lab5.command;
 
 import ru.askar.lab5.collection.CollectionStorage;
-import ru.askar.lab5.exception.NoSuchIdException;
 import ru.askar.lab5.exception.NoSuchKeyException;
 
 public class RemoveByKeyCommand extends Command {
@@ -10,7 +9,7 @@ public class RemoveByKeyCommand extends Command {
     }
 
     @Override
-    public void execute(String[] args) throws NoSuchIdException, NoSuchKeyException {
+    public void execute(String[] args) throws NoSuchKeyException {
         long id = Long.parseLong(args[0]);
         if (CollectionStorage.getInstance().getCollection().remove(id) != null) {
             outputWriter.writeOnSuccess("Элемент удален");

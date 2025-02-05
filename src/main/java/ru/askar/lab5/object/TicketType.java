@@ -9,6 +9,9 @@ public enum TicketType {
     BUDGETARY,
     CHEAP;
 
+    /**
+     * Получить доступные типы в строковом представлении
+     */
     public static String getStringValues() {
         StringBuilder result = new StringBuilder();
         for (TicketType type : values()) {
@@ -20,6 +23,14 @@ public enum TicketType {
         return result.toString();
     }
 
+    /**
+     * Создание экземпляра с пользовательским вводом.
+     * Если запрашиваемого типа нет, предлагается выбрать ещё раз.
+     *
+     * @param outputWriter - способ печати ответа
+     * @param inputReader  - способ считывания входных данных
+     * @return требуемый TicketType
+     */
     public static TicketType createTicketType(OutputWriter outputWriter, InputReader inputReader) {
         outputWriter.writeOnSuccess("Выберите тип билета (" + getStringValues() + "): ");
         TicketType ticketType;

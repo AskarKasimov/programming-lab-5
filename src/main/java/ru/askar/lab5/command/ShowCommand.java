@@ -19,6 +19,6 @@ public class ShowCommand extends Command {
 
     @Override
     public String getInfo() {
-        return "вывести все элементы коллекции в строковом представлении";
+        return "show - вывести все элементы коллекции в строковом представлении";
     }
 }

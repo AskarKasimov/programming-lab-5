@@ -16,18 +16,21 @@ public class InsertCommand extends Command {
     @Override
     public void execute(String[] args) {
         Long id = null;
-        if (!args[0].equals("null")) id = Long.parseLong(args[0]);
-        String name = args[1];
-        long price = Long.parseLong(args[2]);
-        Ticket ticket = Ticket.createTicket(outputWriter, inputReader, id, name, price);
-        try {
-            if (CollectionStorage.getInstance().getCollection().containsKey(ticket.getId())) {
+        if (!args[0].equals("null")) {
+            id = Long.parseLong(args[0]);
+            if (CollectionStorage.getInstance().getCollection().containsKey(id)) {
                 outputWriter.writeOnFail("Такой id уже существует");
                 return;
             }
-        } catch (NullPointerException e) {
-            // ignore
         }
+        String name = args[1];
+        long price;
+        try {
+            price = Long.parseLong(args[2]);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("В поле price требуется число");
+        }
+        Ticket ticket = Ticket.createTicket(outputWriter, inputReader, id, name, price);
         CollectionStorage.getInstance().getCollection().put(ticket.getId(), ticket);
         outputWriter.writeOnSuccess("Элемент добавлен в коллекцию");
     }

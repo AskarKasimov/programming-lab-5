@@ -21,6 +21,6 @@ public class PrintFieldDescendingTypeCommand extends Command {
 
     @Override
     public String getInfo() {
-        return "print_field_descending_type - вывести значения поля type всех элементов в порядке убывания";
+        return "print_field_descending_type - РІС‹РІРµСЃС‚Рё Р·РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ type РІСЃРµС… СЌР»РµРјРµРЅС‚РѕРІ РІ РїРѕСЂСЏРґРєРµ СѓР±С‹РІР°РЅРёСЏ";
     }
 }

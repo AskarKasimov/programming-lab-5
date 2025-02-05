@@ -22,6 +22,6 @@ public class PrintFieldAscendingEventCommand extends Command {
 
     @Override
     public String getInfo() {
-        return "print_field_ascending_event - вывести значения поля event всех элементов в порядке возрастания";
+        return "print_field_ascending_event - РІС‹РІРµСЃС‚Рё Р·РЅР°С‡РµРЅРёСЏ РїРѕР»СЏ event РІСЃРµС… СЌР»РµРјРµРЅС‚РѕРІ РІ РїРѕСЂСЏРґРєРµ РІРѕР·СЂР°СЃС‚Р°РЅРёСЏ";
     }
 }

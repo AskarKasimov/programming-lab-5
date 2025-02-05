@@ -9,16 +9,31 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 public class InputReader {
+    /**
+     * Класс, ответственный за чтение ввода от пользователя и исполнение команд.
+     */
     private final CommandExecutor commandExecutor;
     private final CommandParser commandParser;
     private final BufferedReader bufferedReader;
 
+    /**
+     * @param commandExecutor - класс для выполнения команд.
+     * @param commandParser   - класс для парсинга команд.
+     * @param bufferedReader  - класс для чтения ввода.
+     */
     public InputReader(CommandExecutor commandExecutor, CommandParser commandParser, BufferedReader bufferedReader) {
         this.commandExecutor = commandExecutor;
         this.commandParser = commandParser;
         this.bufferedReader = bufferedReader;
     }
 
+    /**
+     * Считыватель ввода строки.
+     *
+     * @return - строка, введенная пользователем.
+     * @throws IllegalArgumentException - если произошла ошибка ввода.
+     * @see BufferedReader
+     */
     public String getInputString() {
         try {
             return bufferedReader.readLine();
@@ -27,6 +42,13 @@ public class InputReader {
         }
     }
 
+    /**
+     * Считыватель ввода числа с плавающей точкой.
+     *
+     * @return - число с точкой, введенное пользователем.
+     * @throws IllegalArgumentException - если ввод некорректен.
+     * @see BufferedReader
+     */
     public float getInputFloat() {
         try {
             return Float.parseFloat(bufferedReader.readLine());
@@ -37,6 +59,9 @@ public class InputReader {
         }
     }
 
+    /**
+     * Выполнение поступающих команд.
+     */
     public void process() throws IOException {
         String line;
         System.out.print("> ");
@@ -54,8 +79,8 @@ public class InputReader {
                     continue;
                 }
                 commandExecutor.getCommand(parsedCommand.name()).execute(parsedCommand.args());
-            } catch (CollectionIsEmptyException | NoSuchCommandException | NoSuchIdException |
-                     IOException | NoSuchKeyException | IllegalArgumentException e) {
+            } catch (CollectionIsEmptyException | NoSuchCommandException | IOException |
+                     NoSuchKeyException | IllegalArgumentException e) {
                 commandExecutor.getOutputWriter().writeOnFail(e.getMessage());
             } catch (ExitCLIException e) {
                 break;

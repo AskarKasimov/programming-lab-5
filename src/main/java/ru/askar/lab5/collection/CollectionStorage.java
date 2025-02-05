@@ -13,6 +13,9 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.TreeMap;
 
+/**
+ * Singleton для управления главной коллекцией всея CLI
+ */
 public class CollectionStorage {
     private static CollectionStorage instance;
     private final java.time.LocalDateTime dateOfInitialization;
@@ -38,6 +41,12 @@ public class CollectionStorage {
         return getInstance().collection;
     }
 
+    /**
+     * Заполнить коллекцию json-данными из файла
+     *
+     * @param filePath - путь к файлу
+     * @throws IOException - ошибка чтения
+     */
     public void loadFromFile(String filePath) throws IOException {
         try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(filePath))) {
             byte[] data = bis.readAllBytes();

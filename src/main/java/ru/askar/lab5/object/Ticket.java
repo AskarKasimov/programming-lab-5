@@ -7,7 +7,11 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Ticket implements Comparable<Ticket> {
-    private static Long nextId = 1L; // Для автоинкремента
+    /**
+     * Хранение следующего id для автоинкремента при создании объектов
+     */
+    private static Long nextId = 1L;
+
     private final Long id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private final java.time.LocalDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
@@ -16,7 +20,13 @@ public class Ticket implements Comparable<Ticket> {
     private TicketType type; //Поле не может быть null
     private Event event; //Поле может быть null
 
+    /**
+     * Создание экземпляра с заданным id, если такого ещё не было
+     *
+     * @throws IllegalArgumentException - если данный id невозможен
+     */
     public Ticket(Long id, String name, Coordinates coordinates, long price, TicketType type, Event event) {
+        if (id < nextId) throw new IllegalArgumentException("Билет с таким id уже был");
         this.id = id;
         setName(name);
         setCoordinates(coordinates);
@@ -26,10 +36,24 @@ public class Ticket implements Comparable<Ticket> {
         setEvent(event);
     }
 
+    /**
+     * Создание экземпляра с автоинкрементным id.
+     */
     public Ticket(String name, Coordinates coordinates, long price, TicketType type, Event event) {
         this(nextId++, name, coordinates, price, type, event);
     }
 
+    /**
+     * Создание экземпляра с пользовательским вводом.
+     * Параметры помимо <code>name</code> и <code>price</code> будут считываться из заданного метода
+     *
+     * @param outputWriter - способ печати ответа
+     * @param inputReader  - способ считывания входных данных
+     * @param id           - желаемый id билета. <code>null</code>, если автоинкремент
+     * @param name         - название
+     * @param price        - цена
+     * @return - созданный Ticket
+     */
     public static Ticket createTicket(OutputWriter outputWriter, InputReader inputReader, Long id, String name, long price) {
         Coordinates coordinates = Coordinates.createCoordinates(outputWriter, inputReader);
         TicketType ticketType = TicketType.createTicketType(outputWriter, inputReader);
@@ -55,6 +79,9 @@ public class Ticket implements Comparable<Ticket> {
         if (newNextId <= 0) {
             throw new IllegalArgumentException("ID должен быть больше 0");
         }
+        if (newNextId < nextId) {
+            throw new IllegalArgumentException("nextID не может стать меньше");
+        }
         nextId = newNextId;
     }
 
@@ -70,9 +97,13 @@ public class Ticket implements Comparable<Ticket> {
         return Objects.hash(id, name, coordinates, creationDate, price, type, event);
     }
 
+    /**
+     * Сравнение, реализованное через разницу id'шников
+     */
     @Override
     public int compareTo(Ticket o) {
         return Long.compare(this.id, o.id);
+        //TODO: поменять
     }
 
     @Override

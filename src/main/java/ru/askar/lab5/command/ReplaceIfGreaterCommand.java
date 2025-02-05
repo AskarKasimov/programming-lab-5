@@ -18,7 +18,7 @@ public class ReplaceIfGreaterCommand extends Command {
         Long id = Long.parseLong(args[0]);
         Ticket oldTicket = CollectionStorage.getInstance().getCollection().get(id);
         if (oldTicket == null) {
-            outputWriter.writeOnFail("Элемент с таким id не найден");
+            outputWriter.writeOnFail("Р­Р»РµРјРµРЅС‚ СЃ С‚Р°РєРёРј id РЅРµ РЅР°Р№РґРµРЅ");
             return;
         }
 
@@ -28,14 +28,14 @@ public class ReplaceIfGreaterCommand extends Command {
 
         if (oldTicket.compareTo(newTicket) < 0) {
             CollectionStorage.getInstance().getCollection().put(id, newTicket);
-            outputWriter.writeOnSuccess("Элемент обновлен");
+            outputWriter.writeOnSuccess("Р­Р»РµРјРµРЅС‚ РѕР±РЅРѕРІР»РµРЅ");
         } else {
-            outputWriter.writeOnFail("Новое значение не больше старого");
+            outputWriter.writeOnFail("РќРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РЅРµ Р±РѕР»СЊС€Рµ СЃС‚Р°СЂРѕРіРѕ");
         }
     }
 
     @Override
     public String getInfo() {
-        return "replace_if_greater id name price - заменить значение по ключу, если новое значение больше старого";
+        return "replace_if_greater id name price - Р·Р°РјРµРЅРёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕ РєР»СЋС‡Сѓ, РµСЃР»Рё РЅРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ Р±РѕР»СЊС€Рµ СЃС‚Р°СЂРѕРіРѕ";
     }
 }

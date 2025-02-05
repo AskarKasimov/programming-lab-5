@@ -10,6 +10,9 @@ public enum EventType {
     OPERA,
     EXPOSITION;
 
+    /**
+     * Получить доступные типы в строковом представлении
+     */
     public static String getStringValues() {
         StringBuilder result = new StringBuilder();
         for (EventType type : values()) {
@@ -21,6 +24,14 @@ public enum EventType {
         return result.toString();
     }
 
+    /**
+     * Создание экземпляра с пользовательским вводом.
+     * Если запрашиваемого типа нет, предлагается выбрать ещё раз.
+     *
+     * @param outputWriter - способ печати ответа
+     * @param inputReader  - способ считывания входных данных
+     * @return требуемый EventType
+     */
     public static EventType createEventType(OutputWriter outputWriter, InputReader inputReader) {
         outputWriter.writeOnSuccess("Выберите тип события (" + getStringValues() + "): ");
         EventType eventType;

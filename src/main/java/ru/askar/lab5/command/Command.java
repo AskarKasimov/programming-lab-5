@@ -1,23 +1,46 @@
 package ru.askar.lab5.command;
 
 import ru.askar.lab5.cli.output.OutputWriter;
-import ru.askar.lab5.exception.*;
+import ru.askar.lab5.exception.CollectionIsEmptyException;
+import ru.askar.lab5.exception.ExitCLIException;
+import ru.askar.lab5.exception.NoSuchKeyException;
 
 import java.io.IOException;
 
+/**
+ * Абстрактный класс для команд
+ */
 public abstract class Command {
     protected final int argsCount;
     protected final String name;
     protected OutputWriter outputWriter;
 
+    /**
+     * Заполнение имени и количества требуемых аргументов
+     *
+     * @param name
+     * @param argsCount
+     */
     public Command(String name, int argsCount) {
         this.name = name;
         this.argsCount = argsCount;
     }
 
-    public abstract void execute(String[] args) throws NoSuchIdException, IOException, CollectionIsEmptyException, ExitCLIException, NoSuchKeyException;
+    /**
+     * Выполнение логики команды
+     *
+     * @param args - аргументы
+     * @throws IOException                - ошибка чтения ввода
+     * @throws CollectionIsEmptyException - коллекция пуста
+     * @throws ExitCLIException           - выход из CLI
+     * @throws NoSuchKeyException         - нет такого ключа в коллекции, на который пытается сослаться команда
+     */
+    public abstract void execute(String[] args) throws IOException, CollectionIsEmptyException, ExitCLIException, NoSuchKeyException;
 
-    public abstract String getInfo(); // Получить информацию о команде
+    /**
+     * Выдать справку об использовании команды
+     */
+    public abstract String getInfo();
 
     public String getName() {
         return name;
@@ -27,8 +50,12 @@ public abstract class Command {
         return argsCount;
     }
 
+    /**
+     * Задать вывод результата исполнения команды
+     *
+     * @see OutputWriter
+     */
     public void setOutputWriter(OutputWriter newOutputWriter) {
-        if (outputWriter != null) throw new CantChangeOutputWriterException();
         outputWriter = newOutputWriter;
     }
 }

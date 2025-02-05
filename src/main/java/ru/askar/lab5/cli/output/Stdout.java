@@ -1,5 +1,8 @@
 package ru.askar.lab5.cli.output;
 
+/**
+ * Класс для вывода ответов CLI в консоль.
+ */
 public class Stdout implements OutputWriter {
     @Override
     public void writeOnSuccess(String message) {

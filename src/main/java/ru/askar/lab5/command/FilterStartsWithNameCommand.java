@@ -16,6 +16,6 @@ public class FilterStartsWithNameCommand extends Command {
 
     @Override
     public String getInfo() {
-        return "filter_starts_with_name name - вывести элементы, значение поля name которых начинается с заданной подстроки";
+        return "filter_starts_with_name name - РІС‹РІРµСЃС‚Рё СЌР»РµРјРµРЅС‚С‹, Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ name РєРѕС‚РѕСЂС‹С… РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ Р·Р°РґР°РЅРЅРѕР№ РїРѕРґСЃС‚СЂРѕРєРё";
     }
 }

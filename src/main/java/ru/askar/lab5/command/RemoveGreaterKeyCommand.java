@@ -11,11 +11,11 @@ public class RemoveGreaterKeyCommand extends Command {
     public void execute(String[] args) {
         Long key = Long.parseLong(args[0]);
         CollectionStorage.getInstance().getCollection().entrySet().removeIf(e -> e.getKey() > key);
-        outputWriter.writeOnSuccess("Элементы удалены");
+        outputWriter.writeOnSuccess("Р­Р»РµРјРµРЅС‚С‹ СѓРґР°Р»РµРЅС‹");
     }
 
     @Override
     public String getInfo() {
-        return "remove_greater_key key - удалить элементы, ключ которых превышает заданный";
+        return "remove_greater_key key - СѓРґР°Р»РёС‚СЊ СЌР»РµРјРµРЅС‚С‹, РєР»СЋС‡ РєРѕС‚РѕСЂС‹С… РїСЂРµРІС‹С€Р°РµС‚ Р·Р°РґР°РЅРЅС‹Р№";
     }
 }

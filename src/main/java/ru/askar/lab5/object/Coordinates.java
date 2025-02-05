@@ -14,6 +14,13 @@ public class Coordinates {
         setY(y);
     }
 
+    /**
+     * Создание экземпляра с пользовательским вводом.
+     *
+     * @param outputWriter - способ печати ответа
+     * @param inputReader  - способ считывания входных данных
+     * @return - созданный Coordinates
+     */
     public static Coordinates createCoordinates(OutputWriter outputWriter, InputReader inputReader) {
         Coordinates coordinates = new Coordinates((float) 0, (float) 0);
         outputWriter.writeOnSuccess("Ввод координат");

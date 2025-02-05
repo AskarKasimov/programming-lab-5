@@ -6,12 +6,19 @@ import ru.askar.lab5.cli.output.OutputWriter;
 import java.util.Objects;
 
 public class Event implements Comparable<Event> {
-    private static Integer nextId = 1; // Для автоинкремента
+    /**
+     * Хранение следующего id для автоинкремента при создании объектов
+     */
+    private static Integer nextId = 1;
+
     private final Integer id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
     private String description; //Длина строки не должна быть больше 1573, Поле не может быть null
     private EventType eventType; //Поле может быть null
 
+    /**
+     * Создание экземпляра с автоинкрементным id.
+     */
     public Event(String name, String description, EventType eventType) {
         this.id = nextId;
         nextId++;
@@ -20,6 +27,12 @@ public class Event implements Comparable<Event> {
         setEventType(eventType);
     }
 
+    /**
+     * Создание экземпляра с пользовательским вводом.
+     *
+     * @param outputWriter - способ печати ответа
+     * @param inputReader  - способ считывания входных данных
+     */
     public static Event createEvent(OutputWriter outputWriter, InputReader inputReader) {
         Event event = new Event(".", "", null);
         outputWriter.writeOnSuccess("Ввод события");
@@ -46,6 +59,9 @@ public class Event implements Comparable<Event> {
     public static void setNextId(Integer newNextId) {
         if (newNextId <= 0) {
             throw new IllegalArgumentException("ID должен быть больше 0");
+        }
+        if (newNextId < nextId) {
+            throw new IllegalArgumentException("nextID не может стать меньше");
         }
         nextId = newNextId;
     }
