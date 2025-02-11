@@ -1,9 +1,11 @@
 package ru.askar.lab5.object;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.cli.output.OutputWriter;
+import ru.askar.lab5.exception.InvalidInputFieldException;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -13,16 +15,16 @@ public class Coordinates {
     private Float y; //Максимальное значение поля: 654, Поле не может быть null
 
     public Coordinates(Float x,
-                       Float y) {
+                       Float y) throws InvalidInputFieldException {
         setX(x);
         setY(y);
     }
 
     @JsonCreator
     public Coordinates(@JsonProperty("x") Float x,
-                       @JsonProperty("y") BigDecimal y) {
+                       @JsonProperty("y") BigDecimal y) throws InvalidInputFieldException {
         setX(x);
-        setYFromBigDecimal(y);
+        setY(y);
     }
 
     /**
@@ -32,7 +34,7 @@ public class Coordinates {
      * @param inputReader  - способ считывания входных данных
      * @return - созданный Coordinates
      */
-    public static Coordinates createCoordinates(OutputWriter outputWriter, InputReader inputReader) {
+    public static Coordinates createCoordinates(OutputWriter outputWriter, InputReader inputReader) throws InvalidInputFieldException {
         Coordinates coordinates = new Coordinates((float) 0, (float) 0);
         outputWriter.writeOnSuccess("Ввод координат");
 
@@ -68,9 +70,9 @@ public class Coordinates {
         return x;
     }
 
-    public void setX(Float x) {
+    public void setX(Float x) throws InvalidInputFieldException {
         if (x == null) {
-            throw new IllegalArgumentException("X не может быть null");
+            throw new InvalidInputFieldException("Координата X не может быть null");
         }
         this.x = x;
     }
@@ -79,22 +81,23 @@ public class Coordinates {
         return y;
     }
 
-    public void setY(Float y) {
+    @JsonIgnore
+    public void setY(Float y) throws InvalidInputFieldException {
         if (y == null) {
-            throw new IllegalArgumentException("Y не может быть null");
+            throw new InvalidInputFieldException("Координата Y не может быть null");
         }
         if (y > 654) {
-            throw new IllegalArgumentException("Y не может быть больше 654");
+            throw new InvalidInputFieldException("Координата Y не может быть больше 654");
         }
         this.y = y;
     }
 
-    public void setYFromBigDecimal(BigDecimal y) {
+    public void setY(BigDecimal y) throws InvalidInputFieldException {
         if (y == null) {
-            throw new IllegalArgumentException("Y не может быть null");
+            throw new InvalidInputFieldException("Координата Y не может быть null");
         }
         if (y.compareTo(new BigDecimal("654.0")) > 0) {
-            throw new IllegalArgumentException("Y не может быть больше 654.0");
+            throw new InvalidInputFieldException("Координата Y не может быть больше 654.0");
         }
         this.y = y.floatValue();
     }

@@ -1,7 +1,11 @@
 package ru.askar.lab5.command;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import ru.askar.lab5.collection.CollectionManager;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class SaveCommand extends Command {
@@ -14,23 +18,16 @@ public class SaveCommand extends Command {
 
     @Override
     public void execute(String[] args) throws IOException {
-//        Gson gson = new GsonBuilder()
-//                .setPrettyPrinting()
-//                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-//                .create();
-//
-//        String filePath = args[0];
-//        String json = gson.toJson(CollectionManager.getInstance().getCollection()); // Преобразуем коллекцию в JSON и записываем в файл
-//        try (FileOutputStream fos = new FileOutputStream(filePath)) {
-//            fos.write(json.getBytes(StandardCharsets.UTF_8));
-//        } catch (FileNotFoundException e) {
-//            throw new FileNotFoundException("Файл не найден!");
-//        } catch (SecurityException e) {
-//            throw new SecurityException("Недостаточно прав для записи в файл!");
-//        } catch (IOException e) {
-//            throw e;
-//        }
-//        outputWriter.writeOnSuccess("Коллекция успешно записана в файл!");
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        // Отключаем вывод даты в виде массива
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        try (FileOutputStream fileOutputStream = new FileOutputStream(args[0])) {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(fileOutputStream, collectionManager.getCollection());
+            outputWriter.writeOnSuccess("JSON успешно записан в файл " + args[0]);
+        } catch (IOException e) {
+            throw new IOException("Ошибка при записи коллекции в файл " + e.getMessage());
+        }
     }
 
     @Override

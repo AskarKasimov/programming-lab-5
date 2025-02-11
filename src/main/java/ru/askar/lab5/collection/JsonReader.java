@@ -15,7 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class JsonReader implements DataReader {
-    private TreeMap<Long, Ticket> collection;
+    private TreeMap<Long, Ticket> collection = new TreeMap<>();
 
     private static void validateJsonKeys(BufferedInputStream bufferedInputStream) throws IOException {
         bufferedInputStream.mark(Integer.MAX_VALUE); // Mark the current position in the stream

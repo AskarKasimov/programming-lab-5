@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.cli.output.OutputWriter;
+import ru.askar.lab5.exception.InvalidInputFieldException;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -27,7 +28,7 @@ public class Ticket implements Comparable<Ticket> {
      * @throws IllegalArgumentException - если данный id невозможен
      */
     @JsonCreator
-    public Ticket(@JsonProperty("id") Long id, @JsonProperty("name") String name, @JsonProperty("coordinates") Coordinates coordinates, @JsonProperty("price") long price, @JsonProperty("type") TicketType type, @JsonProperty("event") Event event) {
+    public Ticket(@JsonProperty("id") Long id, @JsonProperty("name") String name, @JsonProperty("coordinates") Coordinates coordinates, @JsonProperty("price") long price, @JsonProperty("type") TicketType type, @JsonProperty("event") Event event) throws InvalidInputFieldException {
 //        if (id < nextId) throw new IllegalArgumentException("Билет с таким id уже был");
         setId(id);
         setName(name);
@@ -41,7 +42,7 @@ public class Ticket implements Comparable<Ticket> {
     /**
      * Создание экземпляра с автоинкрементным id.
      */
-    public Ticket(String name, Coordinates coordinates, long price, TicketType type, Event event) {
+    public Ticket(String name, Coordinates coordinates, long price, TicketType type, Event event) throws InvalidInputFieldException {
         this(nextId++, name, coordinates, price, type, event);
     }
 
@@ -56,7 +57,7 @@ public class Ticket implements Comparable<Ticket> {
      * @param price        - цена
      * @return - созданный Ticket
      */
-    public static Ticket createTicket(OutputWriter outputWriter, InputReader inputReader, Long id, String name, long price) {
+    public static Ticket createTicket(OutputWriter outputWriter, InputReader inputReader, Long id, String name, long price) throws InvalidInputFieldException {
         Coordinates coordinates = Coordinates.createCoordinates(outputWriter, inputReader);
         TicketType ticketType = TicketType.createTicketType(outputWriter, inputReader);
         outputWriter.writeOnSuccess("Хотите ввести событие? (y/n): ");
@@ -79,10 +80,10 @@ public class Ticket implements Comparable<Ticket> {
 
     public static void setNextId(Long newNextId) {
         if (newNextId <= 0) {
-            throw new IllegalArgumentException("ID должен быть больше 0");
+            throw new IllegalArgumentException("ID билета должен быть больше 0");
         }
         if (newNextId < nextId) {
-            throw new IllegalArgumentException("nextID не может стать меньше");
+            throw new IllegalArgumentException("nextID билета не может стать меньше");
         }
         nextId = newNextId;
     }
@@ -117,12 +118,12 @@ public class Ticket implements Comparable<Ticket> {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Long id) throws InvalidInputFieldException {
         if (id == null) {
-            throw new IllegalArgumentException("ID не может быть null");
+            throw new InvalidInputFieldException("ID билета не может быть null");
         }
         if (id <= 0) {
-            throw new IllegalArgumentException("ID должен быть больше 0");
+            throw new InvalidInputFieldException("ID билета должен быть больше 0");
         }
         this.id = id;
     }
@@ -131,9 +132,9 @@ public class Ticket implements Comparable<Ticket> {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(String name) throws InvalidInputFieldException {
         if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException("Название не может быть null или пустым");
+            throw new InvalidInputFieldException("Название билета не может быть null или пустым");
         }
         this.name = name;
     }
@@ -142,9 +143,9 @@ public class Ticket implements Comparable<Ticket> {
         return coordinates;
     }
 
-    public void setCoordinates(Coordinates coordinates) {
+    public void setCoordinates(Coordinates coordinates) throws InvalidInputFieldException {
         if (coordinates == null) {
-            throw new IllegalArgumentException("Координаты не могут быть null");
+            throw new InvalidInputFieldException("Координаты билета не могут быть null");
         }
         this.coordinates = coordinates;
     }
@@ -157,9 +158,9 @@ public class Ticket implements Comparable<Ticket> {
         return price;
     }
 
-    public void setPrice(long price) {
+    public void setPrice(long price) throws InvalidInputFieldException {
         if (price <= 0) {
-            throw new IllegalArgumentException("Цена должна быть больше 0");
+            throw new InvalidInputFieldException("Цена билета должна быть больше 0");
         }
         this.price = price;
     }
@@ -168,9 +169,9 @@ public class Ticket implements Comparable<Ticket> {
         return type;
     }
 
-    public void setType(TicketType type) {
+    public void setType(TicketType type) throws InvalidInputFieldException {
         if (type == null) {
-            throw new IllegalArgumentException("Тип билета не может быть null");
+            throw new InvalidInputFieldException("Тип билета не может быть null");
         }
         this.type = type;
     }

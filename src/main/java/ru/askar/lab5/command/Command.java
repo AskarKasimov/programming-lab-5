@@ -3,6 +3,7 @@ package ru.askar.lab5.command;
 import ru.askar.lab5.cli.output.OutputWriter;
 import ru.askar.lab5.exception.CollectionIsEmptyException;
 import ru.askar.lab5.exception.ExitCLIException;
+import ru.askar.lab5.exception.InvalidInputFieldException;
 import ru.askar.lab5.exception.NoSuchKeyException;
 
 import java.io.IOException;
@@ -35,7 +36,7 @@ public abstract class Command {
      * @throws ExitCLIException           - выход из CLI
      * @throws NoSuchKeyException         - нет такого ключа в коллекции, на который пытается сослаться команда
      */
-    public abstract void execute(String[] args) throws IOException, CollectionIsEmptyException, ExitCLIException, NoSuchKeyException;
+    public abstract void execute(String[] args) throws IOException, CollectionIsEmptyException, ExitCLIException, NoSuchKeyException, InvalidInputFieldException;
 
     /**
      * Выдать справку об использовании команды

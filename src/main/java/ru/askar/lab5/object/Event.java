@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.cli.output.OutputWriter;
+import ru.askar.lab5.exception.InvalidInputFieldException;
 
 import java.util.Objects;
 
@@ -19,7 +20,7 @@ public class Event implements Comparable<Event> {
 
     public Event(String name,
                  String description,
-                 EventType eventType) {
+                 EventType eventType) throws InvalidInputFieldException {
         setId(nextId++);
         setName(name);
         setDescription(description);
@@ -30,7 +31,7 @@ public class Event implements Comparable<Event> {
     public Event(@JsonProperty("id") Integer id,
                  @JsonProperty("name") String name,
                  @JsonProperty("description") String description,
-                 @JsonProperty("eventType") EventType eventType) {
+                 @JsonProperty("eventType") EventType eventType) throws InvalidInputFieldException {
         setId(id);
         setName(name);
         setDescription(description);
@@ -43,7 +44,7 @@ public class Event implements Comparable<Event> {
      * @param outputWriter - способ печати ответа
      * @param inputReader  - способ считывания входных данных
      */
-    public static Event createEvent(OutputWriter outputWriter, InputReader inputReader) {
+    public static Event createEvent(OutputWriter outputWriter, InputReader inputReader) throws InvalidInputFieldException {
         Event event = new Event(".", "", null);
         outputWriter.writeOnSuccess("Ввод события");
 
@@ -66,12 +67,12 @@ public class Event implements Comparable<Event> {
         return nextId;
     }
 
-    public static void setNextId(Integer newNextId) {
+    public static void setNextId(Integer newNextId) throws InvalidInputFieldException {
         if (newNextId <= 0) {
-            throw new IllegalArgumentException("ID должен быть больше 0");
+            throw new InvalidInputFieldException("ID события должен быть больше 0");
         }
         if (newNextId < nextId) {
-            throw new IllegalArgumentException("nextID не может стать меньше");
+            throw new InvalidInputFieldException("nextID события не может стать меньше");
         }
         nextId = newNextId;
     }
@@ -106,12 +107,12 @@ public class Event implements Comparable<Event> {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Integer id) throws InvalidInputFieldException {
         if (id == null) {
-            throw new IllegalArgumentException("ID не может быть null");
+            throw new InvalidInputFieldException("ID события не может быть null");
         }
         if (id <= 0) {
-            throw new IllegalArgumentException("ID должен быть больше 0");
+            throw new InvalidInputFieldException("ID события должен быть больше 0");
         }
         this.id = id;
     }
@@ -120,9 +121,9 @@ public class Event implements Comparable<Event> {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(String name) throws InvalidInputFieldException {
         if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException("Название не может быть null или пустым");
+            throw new InvalidInputFieldException("Название события не может быть null или пустым");
         }
         this.name = name;
     }
@@ -131,9 +132,9 @@ public class Event implements Comparable<Event> {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(String description) throws InvalidInputFieldException {
         if (description == null || description.length() > 1573) {
-            throw new IllegalArgumentException("Описание не может быть null");
+            throw new InvalidInputFieldException("Описание события не может быть null");
         }
         this.description = description;
     }

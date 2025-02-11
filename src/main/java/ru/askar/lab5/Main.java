@@ -1,6 +1,7 @@
 package ru.askar.lab5;
 
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import ru.askar.lab5.cli.CommandExecutor;
 import ru.askar.lab5.cli.CommandParser;
 import ru.askar.lab5.cli.input.InputReader;
@@ -10,25 +11,42 @@ import ru.askar.lab5.collection.CollectionManager;
 import ru.askar.lab5.collection.DataReader;
 import ru.askar.lab5.collection.JsonReader;
 import ru.askar.lab5.command.*;
+import ru.askar.lab5.exception.InvalidCollectionFileException;
 
 import java.io.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+        OutputWriter outputWriter = new Stdout();
         String filePath = System.getenv("lab5");
         if (filePath == null || filePath.isEmpty()) {
-            System.out.println("Переменная окружения lab5 не установлена");
+            outputWriter.writeOnFail("Переменная окружения lab5 не установлена");
             return;
         }
-        System.out.println("Используется файл: " + filePath);
+        outputWriter.write("Используется файл: " + filePath);
 
         DataReader dataReader = new JsonReader();
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(filePath));
-        dataReader.readData(bufferedInputStream);
-        bufferedInputStream.close();
+        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(filePath))) {
+            dataReader.readData(bufferedInputStream);
+            outputWriter.writeOnSuccess("Файл успешно захаван:)))");
+        } catch (JsonMappingException e) {
+            Throwable cause = e.getCause();
+            if (cause != null) {
+                outputWriter.writeOnFail("Критическая ошибка поля структуры: " + cause.getMessage());
+            } else {
+                outputWriter.writeOnFail("Неизвестная ошибка считывания данных из файла: " + e.getOriginalMessage());
+            }
+            outputWriter.writeOnWarning("Внимание: используется пустая коллекция");
+        } catch (InvalidCollectionFileException e) {
+            outputWriter.writeOnFail("Критическая ошибка читаемого файла: " + e.getMessage());
+            outputWriter.writeOnWarning("Внимание: используется пустая коллекция");
+        } catch (IOException e) {
+            outputWriter.write("Ошибка при чтении файла: " + e.getMessage());
+            outputWriter.writeOnWarning("Внимание: используется пустая коллекция");
+        }
 
         CollectionManager collectionManager = new CollectionManager(dataReader.getData());
-        OutputWriter outputWriter = new Stdout();
+
         CommandExecutor commandExecutor = new CommandExecutor(outputWriter);
         CommandParser commandParser = new CommandParser();
 

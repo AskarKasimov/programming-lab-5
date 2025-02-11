@@ -84,7 +84,7 @@ public class InputReader {
                 }
                 commandExecutor.getCommand(parsedCommand.name()).execute(parsedCommand.args());
             } catch (CollectionIsEmptyException | NoSuchCommandException | IOException |
-                     NoSuchKeyException | IllegalArgumentException e) {
+                     NoSuchKeyException | IllegalArgumentException | InvalidInputFieldException e) {
                 commandExecutor.getOutputWriter().writeOnFail(e.getMessage());
             } catch (ExitCLIException e) {
                 break;

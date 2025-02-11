@@ -2,6 +2,7 @@ package ru.askar.lab5.command;
 
 import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.collection.CollectionManager;
+import ru.askar.lab5.exception.InvalidInputFieldException;
 import ru.askar.lab5.object.Ticket;
 
 public class UpdateCommand extends Command {
@@ -15,7 +16,7 @@ public class UpdateCommand extends Command {
     }
 
     @Override
-    public void execute(String[] args) {
+    public void execute(String[] args) throws InvalidInputFieldException {
         Long id = Long.parseLong(args[0]);
         Ticket oldTicket = collectionManager.getCollection().get(id);
         if (oldTicket == null) {
