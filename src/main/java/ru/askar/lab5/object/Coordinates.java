@@ -1,17 +1,28 @@
 package ru.askar.lab5.object;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.cli.output.OutputWriter;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Coordinates {
     private Float x; //Поле не может быть null
     private Float y; //Максимальное значение поля: 654, Поле не может быть null
 
-    public Coordinates(Float x, Float y) {
+    public Coordinates(Float x,
+                       Float y) {
         setX(x);
         setY(y);
+    }
+
+    @JsonCreator
+    public Coordinates(@JsonProperty("x") Float x,
+                       @JsonProperty("y") BigDecimal y) {
+        setX(x);
+        setYFromBigDecimal(y);
     }
 
     /**
@@ -76,5 +87,15 @@ public class Coordinates {
             throw new IllegalArgumentException("Y не может быть больше 654");
         }
         this.y = y;
+    }
+
+    public void setYFromBigDecimal(BigDecimal y) {
+        if (y == null) {
+            throw new IllegalArgumentException("Y не может быть null");
+        }
+        if (y.compareTo(new BigDecimal("654.0")) > 0) {
+            throw new IllegalArgumentException("Y не может быть больше 654.0");
+        }
+        this.y = y.floatValue();
     }
 }

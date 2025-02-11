@@ -1,6 +1,6 @@
 package ru.askar.lab5.command;
 
-import ru.askar.lab5.collection.CollectionStorage;
+import ru.askar.lab5.collection.CollectionManager;
 import ru.askar.lab5.exception.CollectionIsEmptyException;
 
 public class ShowCommand extends Command {
@@ -10,10 +10,10 @@ public class ShowCommand extends Command {
 
     @Override
     public void execute(String[] args) throws CollectionIsEmptyException {
-        if (CollectionStorage.getInstance().getCollection().isEmpty())
+        if (CollectionManager.getInstance().getCollection().isEmpty())
             throw new CollectionIsEmptyException();
         else
-            CollectionStorage.getInstance().getCollection()
+            CollectionManager.getInstance().getCollection()
                     .forEach((id, ticket) -> outputWriter.writeOnSuccess(id + ": " + ticket.toString()));
     }
 

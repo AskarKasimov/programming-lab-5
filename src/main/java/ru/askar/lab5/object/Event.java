@@ -1,5 +1,8 @@
 package ru.askar.lab5.object;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.cli.output.OutputWriter;
 
@@ -10,18 +13,26 @@ public class Event implements Comparable<Event> {
      * Хранение следующего id для автоинкремента при создании объектов
      */
     private static Integer nextId = 1;
-
-    private final Integer id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
+    private Integer id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
     private String description; //Длина строки не должна быть больше 1573, Поле не может быть null
     private EventType eventType; //Поле может быть null
 
-    /**
-     * Создание экземпляра с автоинкрементным id.
-     */
-    public Event(String name, String description, EventType eventType) {
-        this.id = nextId;
-        nextId++;
+    public Event(String name,
+                 String description,
+                 EventType eventType) {
+        setId(nextId++);
+        setName(name);
+        setDescription(description);
+        setEventType(eventType);
+    }
+
+    @JsonCreator
+    public Event(@JsonProperty("id") Integer id,
+                 @JsonProperty("name") String name,
+                 @JsonProperty("description") String description,
+                 @JsonProperty("eventType") EventType eventType) {
+        setId(id);
         setName(name);
         setDescription(description);
         setEventType(eventType);
@@ -94,6 +105,16 @@ public class Event implements Comparable<Event> {
 
     public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID не может быть null");
+        }
+        if (id <= 0) {
+            throw new IllegalArgumentException("ID должен быть больше 0");
+        }
+        this.id = id;
     }
 
     public String getName() {

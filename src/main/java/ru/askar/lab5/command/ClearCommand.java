@@ -1,6 +1,6 @@
 package ru.askar.lab5.command;
 
-import ru.askar.lab5.collection.CollectionStorage;
+import ru.askar.lab5.collection.CollectionManager;
 import ru.askar.lab5.exception.CollectionIsEmptyException;
 
 public class ClearCommand extends Command {
@@ -10,10 +10,10 @@ public class ClearCommand extends Command {
 
     @Override
     public void execute(String[] args) throws CollectionIsEmptyException {
-        if (CollectionStorage.getInstance().getCollection().isEmpty())
+        if (CollectionManager.getInstance().getCollection().isEmpty())
             throw new CollectionIsEmptyException();
         else {
-            CollectionStorage.getInstance().getCollection().clear();
+            CollectionManager.getInstance().getCollection().clear();
             outputWriter.writeOnSuccess("Коллекция очищена");
         }
     }

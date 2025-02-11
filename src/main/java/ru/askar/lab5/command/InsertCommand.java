@@ -1,7 +1,7 @@
 package ru.askar.lab5.command;
 
 import ru.askar.lab5.cli.input.InputReader;
-import ru.askar.lab5.collection.CollectionStorage;
+import ru.askar.lab5.collection.CollectionManager;
 import ru.askar.lab5.object.Ticket;
 
 public class InsertCommand extends Command {
@@ -18,7 +18,7 @@ public class InsertCommand extends Command {
         Long id = null;
         if (!args[0].equals("null")) {
             id = Long.parseLong(args[0]);
-            if (CollectionStorage.getInstance().getCollection().containsKey(id)) {
+            if (CollectionManager.getInstance().getCollection().containsKey(id)) {
                 outputWriter.writeOnFail("Такой id уже существует");
                 return;
             }
@@ -31,7 +31,7 @@ public class InsertCommand extends Command {
             throw new IllegalArgumentException("В поле price требуется число");
         }
         Ticket ticket = Ticket.createTicket(outputWriter, inputReader, id, name, price);
-        CollectionStorage.getInstance().getCollection().put(ticket.getId(), ticket);
+        CollectionManager.getInstance().getCollection().put(ticket.getId(), ticket);
         outputWriter.writeOnSuccess("Элемент добавлен в коллекцию");
     }
 

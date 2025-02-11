@@ -1,6 +1,6 @@
 package ru.askar.lab5.command;
 
-import ru.askar.lab5.collection.CollectionStorage;
+import ru.askar.lab5.collection.CollectionManager;
 import ru.askar.lab5.object.Event;
 import ru.askar.lab5.object.Ticket;
 
@@ -13,7 +13,7 @@ public class PrintFieldAscendingEventCommand extends Command {
 
     @Override
     public void execute(String[] args) {
-        CollectionStorage.getInstance().getCollection().values().stream()
+        CollectionManager.getInstance().getCollection().values().stream()
                 .map(Ticket::getEvent)
                 .filter(Objects::nonNull)
                 .sorted(Event::compareTo)

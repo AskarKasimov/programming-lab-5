@@ -6,7 +6,6 @@ import ru.askar.lab5.cli.CommandParser;
 import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.cli.output.OutputWriter;
 import ru.askar.lab5.cli.output.Stdout;
-import ru.askar.lab5.collection.CollectionStorage;
 import ru.askar.lab5.command.*;
 
 import java.io.BufferedReader;
@@ -49,7 +48,7 @@ public class Main {
             return;
         }
 
-        CollectionStorage.getInstance().loadFromFile(filePath);
+//        CollectionManager.getInstance().loadFromFile(filePath);
 
         inputReader.process();
     }

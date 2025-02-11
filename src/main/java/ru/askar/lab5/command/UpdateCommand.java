@@ -1,7 +1,7 @@
 package ru.askar.lab5.command;
 
 import ru.askar.lab5.cli.input.InputReader;
-import ru.askar.lab5.collection.CollectionStorage;
+import ru.askar.lab5.collection.CollectionManager;
 import ru.askar.lab5.object.Ticket;
 
 public class UpdateCommand extends Command {
@@ -15,7 +15,7 @@ public class UpdateCommand extends Command {
     @Override
     public void execute(String[] args) {
         Long id = Long.parseLong(args[0]);
-        Ticket oldTicket = CollectionStorage.getInstance().getCollection().get(id);
+        Ticket oldTicket = CollectionManager.getInstance().getCollection().get(id);
         if (oldTicket == null) {
             outputWriter.writeOnFail("Элемент с таким id не найден");
             return;
@@ -30,7 +30,7 @@ public class UpdateCommand extends Command {
         outputWriter.writeOnSuccess("Хотите изменить прочие данные? (y/n): ");
         if (inputReader.getInputString().equals("y")) {
             Ticket newTicket = Ticket.createTicket(outputWriter, inputReader, id, name, price);
-            CollectionStorage.getInstance().getCollection().put(id, newTicket);
+            CollectionManager.getInstance().getCollection().put(id, newTicket);
         } else {
             oldTicket.setName(name);
             oldTicket.setPrice(price);

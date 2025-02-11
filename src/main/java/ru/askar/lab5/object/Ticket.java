@@ -1,5 +1,7 @@
 package ru.askar.lab5.object;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.cli.output.OutputWriter;
 
@@ -11,9 +13,8 @@ public class Ticket implements Comparable<Ticket> {
      * Хранение следующего id для автоинкремента при создании объектов
      */
     private static Long nextId = 1L;
-
-    private final Long id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private final java.time.LocalDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
+    private Long id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; //Поле не может быть null
     private long price; //Значение поля должно быть больше 0
@@ -25,9 +26,10 @@ public class Ticket implements Comparable<Ticket> {
      *
      * @throws IllegalArgumentException - если данный id невозможен
      */
-    public Ticket(Long id, String name, Coordinates coordinates, long price, TicketType type, Event event) {
+    @JsonCreator
+    public Ticket(@JsonProperty("id") Long id, @JsonProperty("name") String name, @JsonProperty("coordinates") Coordinates coordinates, @JsonProperty("price") long price, @JsonProperty("type") TicketType type, @JsonProperty("event") Event event) {
 //        if (id < nextId) throw new IllegalArgumentException("Билет с таким id уже был");
-        this.id = id;
+        setId(id);
         setName(name);
         setCoordinates(coordinates);
         this.creationDate = LocalDateTime.now();
@@ -113,6 +115,16 @@ public class Ticket implements Comparable<Ticket> {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID не может быть null");
+        }
+        if (id <= 0) {
+            throw new IllegalArgumentException("ID должен быть больше 0");
+        }
+        this.id = id;
     }
 
     public String getName() {

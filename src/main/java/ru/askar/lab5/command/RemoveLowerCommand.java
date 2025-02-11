@@ -1,7 +1,7 @@
 package ru.askar.lab5.command;
 
 import ru.askar.lab5.cli.input.InputReader;
-import ru.askar.lab5.collection.CollectionStorage;
+import ru.askar.lab5.collection.CollectionManager;
 import ru.askar.lab5.object.Event;
 import ru.askar.lab5.object.Ticket;
 
@@ -18,9 +18,9 @@ public class RemoveLowerCommand extends Command {
         Ticket ticket = Ticket.createTicket(outputWriter, inputReader, null, args[0], Long.parseLong(args[1]));
         Ticket.setNextId(ticket.getId() - 1);
         if (ticket.getEvent() != null) Event.setNextId(ticket.getEvent().getId() - 1);
-        int oldSize = CollectionStorage.getInstance().getCollection().size();
-        CollectionStorage.getInstance().getCollection().values().removeIf(t -> t.compareTo(ticket) < 0);
-        if (oldSize == CollectionStorage.getInstance().getCollection().size()) {
+        int oldSize = CollectionManager.getInstance().getCollection().size();
+        CollectionManager.getInstance().getCollection().values().removeIf(t -> t.compareTo(ticket) < 0);
+        if (oldSize == CollectionManager.getInstance().getCollection().size()) {
             outputWriter.writeOnFail("Элементы не найдены");
             return;
         }

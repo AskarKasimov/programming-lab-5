@@ -1,6 +1,6 @@
 package ru.askar.lab5.command;
 
-import ru.askar.lab5.collection.CollectionStorage;
+import ru.askar.lab5.collection.CollectionManager;
 import ru.askar.lab5.object.Ticket;
 
 import java.util.Objects;
@@ -12,7 +12,7 @@ public class PrintFieldDescendingTypeCommand extends Command {
 
     @Override
     public void execute(String[] args) {
-        CollectionStorage.getInstance().getCollection().values().stream()
+        CollectionManager.getInstance().getCollection().values().stream()
                 .map(Ticket::getType)
                 .filter(Objects::nonNull)
                 .sorted()

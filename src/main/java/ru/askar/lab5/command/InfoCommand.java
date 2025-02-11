@@ -1,6 +1,6 @@
 package ru.askar.lab5.command;
 
-import ru.askar.lab5.collection.CollectionStorage;
+import ru.askar.lab5.collection.CollectionManager;
 
 public class InfoCommand extends Command {
     public InfoCommand() {
@@ -9,9 +9,9 @@ public class InfoCommand extends Command {
 
     @Override
     public void execute(String[] args) {
-        outputWriter.writeOnSuccess("Тип коллекции: " + CollectionStorage.getInstance().getCollection().getClass());
-        outputWriter.writeOnSuccess("Дата инициализации: " + CollectionStorage.getInstance().getDateOfCreation());
-        outputWriter.writeOnSuccess("Количество элементов: " + CollectionStorage.getInstance().getCollection().size());
+        outputWriter.writeOnSuccess("Тип коллекции: " + CollectionManager.getInstance().getCollection().getClass());
+        outputWriter.writeOnSuccess("Дата инициализации: " + CollectionManager.getInstance().getDateOfCreation());
+        outputWriter.writeOnSuccess("Количество элементов: " + CollectionManager.getInstance().getCollection().size());
     }
 
     @Override

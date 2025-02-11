@@ -1,6 +1,6 @@
 package ru.askar.lab5.command;
 
-import ru.askar.lab5.collection.CollectionStorage;
+import ru.askar.lab5.collection.CollectionManager;
 
 public class FilterStartsWithNameCommand extends Command {
     public FilterStartsWithNameCommand() {
@@ -9,7 +9,7 @@ public class FilterStartsWithNameCommand extends Command {
 
     @Override
     public void execute(String[] args) {
-        CollectionStorage.getInstance().getCollection().values().stream()
+        CollectionManager.getInstance().getCollection().values().stream()
                 .filter(t -> t.getName().startsWith(args[0]))
                 .forEach(t -> outputWriter.writeOnSuccess(t.toString()));
     }

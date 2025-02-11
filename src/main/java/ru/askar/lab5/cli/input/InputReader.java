@@ -36,7 +36,11 @@ public class InputReader {
      */
     public String getInputString() {
         try {
-            return bufferedReader.readLine();
+            String line = bufferedReader.readLine();
+            if (line.isEmpty()) {
+                return null;
+            }
+            return line;
         } catch (IOException e) {
             throw new IllegalArgumentException("Ошибка ввода");
         }
