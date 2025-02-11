@@ -17,6 +17,31 @@ import java.util.regex.Pattern;
 public class JsonReader implements DataReader {
     private TreeMap<Long, Ticket> collection;
 
+    private static void validateJsonKeys(BufferedInputStream bufferedInputStream) throws IOException {
+        bufferedInputStream.mark(Integer.MAX_VALUE); // Mark the current position in the stream
+        String json = readAllLines(bufferedInputStream);
+        Matcher matcher = Pattern.compile("\"(\\d+)\":").matcher(json);
+        Set<String> keys = new HashSet<>();
+
+        while (matcher.find()) {
+            String key = matcher.group(1);
+            if (!keys.add(key)) {
+                throw new InvalidCollectionFileException("Ошибка: дублирующийся ключ: " + key);
+            }
+        }
+    }
+
+    private static String readAllLines(BufferedInputStream bufferedInputStream) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(bufferedInputStream));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line).append("\n");
+        }
+        bufferedInputStream.reset();
+        return sb.toString().trim();
+    }
+
     @Override
     public void readData(BufferedInputStream inputStream) throws IOException {
         validateJsonKeys(inputStream);
@@ -54,29 +79,4 @@ public class JsonReader implements DataReader {
         });
         redactedTickets.forEach((id, ticket) -> System.out.println(id + ": " + ticket));
     }
-
-    private static void validateJsonKeys(BufferedInputStream bufferedInputStream) throws IOException {
-        String json = readAllLines(bufferedInputStream);
-        Matcher matcher = Pattern.compile("\"(\\d+)\":").matcher(json);
-        Set<String> keys = new HashSet<>();
-
-        while (matcher.find()) {
-            String key = matcher.group(1);
-            if (!keys.add(key)) {
-                throw new InvalidCollectionFileException("Ошибка: дублирующийся ключ: " + key);
-            }
-        }
-    }
-
-    private static String readAllLines(BufferedInputStream bis) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(bis))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
-        }
-        return sb.toString().trim();
-    }
-
 }

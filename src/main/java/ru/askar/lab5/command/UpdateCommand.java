@@ -5,17 +5,19 @@ import ru.askar.lab5.collection.CollectionManager;
 import ru.askar.lab5.object.Ticket;
 
 public class UpdateCommand extends Command {
+    private final CollectionManager collectionManager;
     private final InputReader inputReader;
 
-    public UpdateCommand(InputReader inputReader) {
+    public UpdateCommand(CollectionManager collectionManager, InputReader inputReader) {
         super("update", 3);
         this.inputReader = inputReader;
+        this.collectionManager = collectionManager;
     }
 
     @Override
     public void execute(String[] args) {
         Long id = Long.parseLong(args[0]);
-        Ticket oldTicket = CollectionManager.getInstance().getCollection().get(id);
+        Ticket oldTicket = collectionManager.getCollection().get(id);
         if (oldTicket == null) {
             outputWriter.writeOnFail("Элемент с таким id не найден");
             return;
@@ -30,7 +32,7 @@ public class UpdateCommand extends Command {
         outputWriter.writeOnSuccess("Хотите изменить прочие данные? (y/n): ");
         if (inputReader.getInputString().equals("y")) {
             Ticket newTicket = Ticket.createTicket(outputWriter, inputReader, id, name, price);
-            CollectionManager.getInstance().getCollection().put(id, newTicket);
+            collectionManager.getCollection().put(id, newTicket);
         } else {
             oldTicket.setName(name);
             oldTicket.setPrice(price);

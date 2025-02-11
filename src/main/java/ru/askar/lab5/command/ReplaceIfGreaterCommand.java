@@ -6,17 +6,19 @@ import ru.askar.lab5.object.Event;
 import ru.askar.lab5.object.Ticket;
 
 public class ReplaceIfGreaterCommand extends Command {
+    private final CollectionManager collectionManager;
     private final InputReader inputReader;
 
-    public ReplaceIfGreaterCommand(InputReader inputReader) {
+    public ReplaceIfGreaterCommand(CollectionManager collectionManager, InputReader inputReader) {
         super("replace_if_greater", 3);
         this.inputReader = inputReader;
+        this.collectionManager = collectionManager;
     }
 
     @Override
     public void execute(String[] args) {
         Long id = Long.parseLong(args[0]);
-        Ticket oldTicket = CollectionManager.getInstance().getCollection().get(id);
+        Ticket oldTicket = collectionManager.getCollection().get(id);
         if (oldTicket == null) {
             outputWriter.writeOnFail("Элемент с таким id не найден");
             return;
@@ -27,7 +29,7 @@ public class ReplaceIfGreaterCommand extends Command {
         if (newTicket.getEvent() != null) Event.setNextId(newTicket.getEvent().getId() - 1);
 
         if (oldTicket.compareTo(newTicket) < 0) {
-            CollectionManager.getInstance().getCollection().put(id, newTicket);
+            collectionManager.getCollection().put(id, newTicket);
             outputWriter.writeOnSuccess("Элемент обновлен");
         } else {
             outputWriter.writeOnFail("Новое значение не больше старого");

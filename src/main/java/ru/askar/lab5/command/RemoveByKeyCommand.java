@@ -4,14 +4,17 @@ import ru.askar.lab5.collection.CollectionManager;
 import ru.askar.lab5.exception.NoSuchKeyException;
 
 public class RemoveByKeyCommand extends Command {
-    public RemoveByKeyCommand() {
+    private final CollectionManager collectionManager;
+
+    public RemoveByKeyCommand(CollectionManager collectionManager) {
         super("remove_key", 1);
+        this.collectionManager = collectionManager;
     }
 
     @Override
     public void execute(String[] args) throws NoSuchKeyException {
         long id = Long.parseLong(args[0]);
-        if (CollectionManager.getInstance().getCollection().remove(id) != null) {
+        if (collectionManager.getCollection().remove(id) != null) {
             outputWriter.writeOnSuccess("Элемент удален");
         } else {
             throw new NoSuchKeyException();

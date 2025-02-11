@@ -6,17 +6,28 @@ import ru.askar.lab5.cli.CommandParser;
 import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.cli.output.OutputWriter;
 import ru.askar.lab5.cli.output.Stdout;
+import ru.askar.lab5.collection.CollectionManager;
+import ru.askar.lab5.collection.DataReader;
+import ru.askar.lab5.collection.JsonReader;
 import ru.askar.lab5.command.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
+import java.io.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        System.setOut(new PrintStream(System.out, true, "CP1251"));
+        String filePath = System.getenv("lab5");
+        if (filePath == null || filePath.isEmpty()) {
+            System.out.println("Переменная окружения lab5 не установлена");
+            return;
+        }
+        System.out.println("Используется файл: " + filePath);
 
+        DataReader dataReader = new JsonReader();
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(filePath));
+        dataReader.readData(bufferedInputStream);
+        bufferedInputStream.close();
+
+        CollectionManager collectionManager = new CollectionManager(dataReader.getData());
         OutputWriter outputWriter = new Stdout();
         CommandExecutor commandExecutor = new CommandExecutor(outputWriter);
         CommandParser commandParser = new CommandParser();
@@ -25,30 +36,21 @@ public class Main {
         InputReader inputReader = new InputReader(commandExecutor, commandParser, bufferedReader);
 
         commandExecutor.register(new HelpCommand(commandExecutor));
-        commandExecutor.register(new InfoCommand());
-        commandExecutor.register(new ShowCommand());
-        commandExecutor.register(new InsertCommand(inputReader));
-        commandExecutor.register(new UpdateCommand(inputReader));
-        commandExecutor.register(new RemoveByKeyCommand());
-        commandExecutor.register(new ClearCommand());
-        commandExecutor.register(new SaveCommand());
+        commandExecutor.register(new InfoCommand(collectionManager));
+        commandExecutor.register(new ShowCommand(collectionManager));
+        commandExecutor.register(new InsertCommand(collectionManager, inputReader));
+        commandExecutor.register(new UpdateCommand(collectionManager, inputReader));
+        commandExecutor.register(new RemoveByKeyCommand(collectionManager));
+        commandExecutor.register(new ClearCommand(collectionManager));
+        commandExecutor.register(new SaveCommand(collectionManager));
         commandExecutor.register(new ScriptCommand(commandExecutor, commandParser));
         commandExecutor.register(new ExitCommand());
-        commandExecutor.register(new RemoveLowerCommand(inputReader));
-        commandExecutor.register(new ReplaceIfGreaterCommand(inputReader));
-        commandExecutor.register(new RemoveGreaterKeyCommand());
-        commandExecutor.register(new FilterStartsWithNameCommand());
-        commandExecutor.register(new PrintFieldAscendingEventCommand());
-        commandExecutor.register(new PrintFieldDescendingTypeCommand());
-
-        String filePath = System.getenv("lab5");
-
-        if (filePath == null || filePath.isEmpty()) {
-            System.out.println("Переменная окружения lab5 не установлена");
-            return;
-        }
-
-//        CollectionManager.getInstance().loadFromFile(filePath);
+        commandExecutor.register(new RemoveLowerCommand(collectionManager, inputReader));
+        commandExecutor.register(new ReplaceIfGreaterCommand(collectionManager, inputReader));
+        commandExecutor.register(new RemoveGreaterKeyCommand(collectionManager));
+        commandExecutor.register(new FilterStartsWithNameCommand(collectionManager));
+        commandExecutor.register(new PrintFieldAscendingEventCommand(collectionManager));
+        commandExecutor.register(new PrintFieldDescendingTypeCommand(collectionManager));
 
         inputReader.process();
     }

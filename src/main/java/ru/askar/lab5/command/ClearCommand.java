@@ -4,16 +4,19 @@ import ru.askar.lab5.collection.CollectionManager;
 import ru.askar.lab5.exception.CollectionIsEmptyException;
 
 public class ClearCommand extends Command {
-    public ClearCommand() {
+    private final CollectionManager collectionManager;
+
+    public ClearCommand(CollectionManager collectionManager) {
         super("clear", 0);
+        this.collectionManager = collectionManager;
     }
 
     @Override
     public void execute(String[] args) throws CollectionIsEmptyException {
-        if (CollectionManager.getInstance().getCollection().isEmpty())
+        if (collectionManager.getCollection().isEmpty())
             throw new CollectionIsEmptyException();
         else {
-            CollectionManager.getInstance().getCollection().clear();
+            collectionManager.getCollection().clear();
             outputWriter.writeOnSuccess("Коллекция очищена");
         }
     }

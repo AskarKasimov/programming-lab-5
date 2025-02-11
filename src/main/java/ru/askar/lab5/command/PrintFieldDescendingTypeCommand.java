@@ -6,13 +6,16 @@ import ru.askar.lab5.object.Ticket;
 import java.util.Objects;
 
 public class PrintFieldDescendingTypeCommand extends Command {
-    public PrintFieldDescendingTypeCommand() {
+    private final CollectionManager collectionManager;
+
+    public PrintFieldDescendingTypeCommand(CollectionManager collectionManager) {
         super("print_field_descending_type", 0);
+        this.collectionManager = collectionManager;
     }
 
     @Override
     public void execute(String[] args) {
-        CollectionManager.getInstance().getCollection().values().stream()
+        collectionManager.getCollection().values().stream()
                 .map(Ticket::getType)
                 .filter(Objects::nonNull)
                 .sorted()

@@ -12,7 +12,7 @@ public class CollectionManager {
     private final java.time.LocalDateTime dateOfInitialization;
     private final TreeMap<Long, Ticket> collection;
 
-    private CollectionManager(TreeMap<Long, Ticket> collection) {
+    public CollectionManager(TreeMap<Long, Ticket> collection) {
         dateOfInitialization = java.time.LocalDateTime.now();
         this.collection = collection;
     }

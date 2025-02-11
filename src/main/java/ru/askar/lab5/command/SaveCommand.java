@@ -1,10 +1,15 @@
 package ru.askar.lab5.command;
 
+import ru.askar.lab5.collection.CollectionManager;
+
 import java.io.IOException;
 
 public class SaveCommand extends Command {
-    public SaveCommand() {
+    private final CollectionManager collectionManager;
+
+    public SaveCommand(CollectionManager collectionManager) {
         super("save", 1);
+        this.collectionManager = collectionManager;
     }
 
     @Override

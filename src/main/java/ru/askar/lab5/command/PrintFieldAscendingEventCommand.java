@@ -7,13 +7,16 @@ import ru.askar.lab5.object.Ticket;
 import java.util.Objects;
 
 public class PrintFieldAscendingEventCommand extends Command {
-    public PrintFieldAscendingEventCommand() {
+    private final CollectionManager collectionManager;
+
+    public PrintFieldAscendingEventCommand(CollectionManager collectionManager) {
         super("print_field_ascending_event", 0);
+        this.collectionManager = collectionManager;
     }
 
     @Override
     public void execute(String[] args) {
-        CollectionManager.getInstance().getCollection().values().stream()
+        collectionManager.getCollection().values().stream()
                 .map(Ticket::getEvent)
                 .filter(Objects::nonNull)
                 .sorted(Event::compareTo)

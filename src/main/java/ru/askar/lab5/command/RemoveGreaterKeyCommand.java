@@ -3,14 +3,17 @@ package ru.askar.lab5.command;
 import ru.askar.lab5.collection.CollectionManager;
 
 public class RemoveGreaterKeyCommand extends Command {
-    public RemoveGreaterKeyCommand() {
+    private final CollectionManager collectionManager;
+
+    public RemoveGreaterKeyCommand(CollectionManager collectionManager) {
         super("remove_greater_key", 1);
+        this.collectionManager = collectionManager;
     }
 
     @Override
     public void execute(String[] args) {
         Long key = Long.parseLong(args[0]);
-        CollectionManager.getInstance().getCollection().entrySet().removeIf(e -> e.getKey() > key);
+        collectionManager.getCollection().entrySet().removeIf(e -> e.getKey() > key);
         outputWriter.writeOnSuccess("Элементы удалены");
     }
 

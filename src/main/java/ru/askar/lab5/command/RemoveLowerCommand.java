@@ -6,11 +6,13 @@ import ru.askar.lab5.object.Event;
 import ru.askar.lab5.object.Ticket;
 
 public class RemoveLowerCommand extends Command {
+    private final CollectionManager collectionManager;
     private final InputReader inputReader;
 
-    public RemoveLowerCommand(InputReader inputReader) {
+    public RemoveLowerCommand(CollectionManager collectionManager, InputReader inputReader) {
         super("remove_lower", 2);
         this.inputReader = inputReader;
+        this.collectionManager = collectionManager;
     }
 
     @Override
@@ -18,9 +20,9 @@ public class RemoveLowerCommand extends Command {
         Ticket ticket = Ticket.createTicket(outputWriter, inputReader, null, args[0], Long.parseLong(args[1]));
         Ticket.setNextId(ticket.getId() - 1);
         if (ticket.getEvent() != null) Event.setNextId(ticket.getEvent().getId() - 1);
-        int oldSize = CollectionManager.getInstance().getCollection().size();
-        CollectionManager.getInstance().getCollection().values().removeIf(t -> t.compareTo(ticket) < 0);
-        if (oldSize == CollectionManager.getInstance().getCollection().size()) {
+        int oldSize = collectionManager.getCollection().size();
+        collectionManager.getCollection().values().removeIf(t -> t.compareTo(ticket) < 0);
+        if (oldSize == collectionManager.getCollection().size()) {
             outputWriter.writeOnFail("Элементы не найдены");
             return;
         }
