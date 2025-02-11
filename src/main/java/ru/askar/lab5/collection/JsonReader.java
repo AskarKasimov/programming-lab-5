@@ -7,53 +7,34 @@ import ru.askar.lab5.exception.InvalidCollectionFileException;
 import ru.askar.lab5.object.Ticket;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.TreeMap;
 
 public class JsonReader implements DataReader {
     private TreeMap<Long, Ticket> collection = new TreeMap<>();
 
-    private static void validateJsonKeys(BufferedInputStream bufferedInputStream) throws IOException {
-        bufferedInputStream.mark(Integer.MAX_VALUE); // Mark the current position in the stream
-        String json = readAllLines(bufferedInputStream);
-        Matcher matcher = Pattern.compile("\"(\\d+)\":").matcher(json);
-        Set<String> keys = new HashSet<>();
-
-        while (matcher.find()) {
-            String key = matcher.group(1);
-            if (!keys.add(key)) {
-                throw new InvalidCollectionFileException("Ошибка: дублирующийся ключ: " + key);
-            }
-        }
-    }
-
-    private static String readAllLines(BufferedInputStream bufferedInputStream) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(bufferedInputStream));
-        String line;
-        while ((line = reader.readLine()) != null) {
-            sb.append(line).append("\n");
-        }
-        bufferedInputStream.reset();
-        return sb.toString().trim();
-    }
-
     @Override
     public void readData(BufferedInputStream inputStream) throws IOException {
-        validateJsonKeys(inputStream);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        Map<String, Ticket> tempMap = objectMapper.readValue(inputStream, new TypeReference<>() {
+        ArrayList<Ticket> tempMap = objectMapper.readValue(inputStream, new TypeReference<>() {
         });
         TreeMap<Long, Ticket> tickets = new TreeMap<>();
-        for (Map.Entry<String, Ticket> entry : tempMap.entrySet()) {
-            tickets.put(Long.parseLong(entry.getKey()), entry.getValue());
-        }
+        tempMap.forEach(ticket -> {
+            if (tickets.containsKey(ticket.getId())) {
+                throw new InvalidCollectionFileException("были обнаружены билеты (Ticket) с одинаковыми id");
+            }
+            tickets.put(ticket.getId(), ticket);
+        });
         this.collection = tickets;
+        try {
+            validateData();
+        } catch (InvalidCollectionFileException e) {
+            this.collection = new TreeMap<>();
+            throw e;
+        }
     }
 
     @Override
@@ -61,22 +42,12 @@ public class JsonReader implements DataReader {
         return collection;
     }
 
-    @Override
-    public void validateData() throws InvalidCollectionFileException {
-        TreeMap<Long, Ticket> redactedTickets = new TreeMap<>();
+    private void validateData() throws InvalidCollectionFileException {
         ArrayList<Integer> eventsIds = new ArrayList<>(collection.values().stream().map((ticket -> ticket.getEvent() != null ? ticket.getEvent().getId() : 0)).toList());
         collection.forEach((id, ticket) -> {
             if (ticket.getEvent() != null && Collections.frequency(eventsIds, ticket.getEvent().getId()) > 1) {
-                throw new InvalidCollectionFileException("Ошибка: были обнаружены события (Event) с одинаковыми id");
+                throw new InvalidCollectionFileException("были обнаружены события (Event) с одинаковыми id");
             }
-            if (!Objects.equals(ticket.getId(), id)) {
-                System.out.println("Внимание: был обнаружен билет с несовпадением ключа и id. Исправляю путём замены ключа на id...");
-                if (redactedTickets.containsKey(ticket.getId())) {
-                    throw new InvalidCollectionFileException("Ошибка: были обнаружены билеты (Ticket) с одинаковыми id");
-                }
-                redactedTickets.put(ticket.getId(), ticket);
-            } else redactedTickets.put(id, ticket);
         });
-        redactedTickets.forEach((id, ticket) -> System.out.println(id + ": " + ticket));
     }
 }

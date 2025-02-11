@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.util.TreeMap;
 
 public interface DataReader {
-    void validateData();
-
     void readData(BufferedInputStream bufferedInputStream) throws IOException;
 
     TreeMap<Long, Ticket> getData();

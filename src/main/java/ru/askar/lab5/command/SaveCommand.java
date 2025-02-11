@@ -23,7 +23,7 @@ public class SaveCommand extends Command {
         // Отключаем вывод даты в виде массива
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         try (FileOutputStream fileOutputStream = new FileOutputStream(args[0])) {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(fileOutputStream, collectionManager.getCollection());
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(fileOutputStream, collectionManager.getCollection().values());
             outputWriter.writeOnSuccess("JSON успешно записан в файл " + args[0]);
         } catch (IOException e) {
             throw new IOException("Ошибка при записи коллекции в файл " + e.getMessage());
