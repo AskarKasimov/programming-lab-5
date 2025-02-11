@@ -17,14 +17,6 @@ public class InsertCommand extends Command {
 
     @Override
     public void execute(String[] args) throws InvalidInputFieldException {
-        Long id = null;
-        if (!args[0].equals("null")) {
-            id = Long.parseLong(args[0]);
-            if (collectionManager.getCollection().containsKey(id)) {
-                outputWriter.writeOnFail("Такой id уже существует");
-                return;
-            }
-        }
         String name = args[1];
         long price;
         try {
@@ -32,7 +24,19 @@ public class InsertCommand extends Command {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("В поле price требуется число");
         }
-        Ticket ticket = Ticket.createTicket(outputWriter, inputReader, id, name, price);
+
+        Long id;
+        if (args[0].equals("null")) {
+            id = collectionManager.generateNextTicketId();
+            outputWriter.writeOnWarning("id не был указан, поэтому он был сгенерирован автоматически (минимальный из отсутствующих): " + id);
+        } else {
+            id = Long.parseLong(args[0]);
+            if (collectionManager.getCollection().containsKey(id)) {
+                throw new IllegalArgumentException("Такой id уже существует");
+            }
+        }
+
+        Ticket ticket = Ticket.createTicket(outputWriter, inputReader, id, name, price, collectionManager.generateNextEventId());
         collectionManager.getCollection().put(ticket.getId(), ticket);
         outputWriter.writeOnSuccess("Элемент добавлен в коллекцию");
     }

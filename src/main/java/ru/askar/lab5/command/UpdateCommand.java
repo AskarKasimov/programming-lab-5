@@ -32,7 +32,7 @@ public class UpdateCommand extends Command {
         }
         outputWriter.writeOnSuccess("Хотите изменить прочие данные? (y/n): ");
         if (inputReader.getInputString().equals("y")) {
-            Ticket newTicket = Ticket.createTicket(outputWriter, inputReader, id, name, price);
+            Ticket newTicket = Ticket.createTicket(outputWriter, inputReader, id, name, price, collectionManager.generateNextEventId());
             collectionManager.getCollection().put(id, newTicket);
         } else {
             oldTicket.setName(name);

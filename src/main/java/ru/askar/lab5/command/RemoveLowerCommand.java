@@ -3,7 +3,6 @@ package ru.askar.lab5.command;
 import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.collection.CollectionManager;
 import ru.askar.lab5.exception.InvalidInputFieldException;
-import ru.askar.lab5.object.Event;
 import ru.askar.lab5.object.Ticket;
 
 public class RemoveLowerCommand extends Command {
@@ -18,9 +17,7 @@ public class RemoveLowerCommand extends Command {
 
     @Override
     public void execute(String[] args) throws InvalidInputFieldException {
-        Ticket ticket = Ticket.createTicket(outputWriter, inputReader, null, args[0], Long.parseLong(args[1]));
-        Ticket.setNextId(ticket.getId() - 1);
-        if (ticket.getEvent() != null) Event.setNextId(ticket.getEvent().getId() - 1);
+        Ticket ticket = Ticket.createTicket(outputWriter, inputReader, 1L, args[0], Long.parseLong(args[1]), collectionManager.generateNextEventId());
         int oldSize = collectionManager.getCollection().size();
         collectionManager.getCollection().values().removeIf(t -> t.compareTo(ticket) < 0);
         if (oldSize == collectionManager.getCollection().size()) {

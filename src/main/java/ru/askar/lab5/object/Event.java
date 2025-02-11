@@ -9,23 +9,10 @@ import ru.askar.lab5.exception.InvalidInputFieldException;
 import java.util.Objects;
 
 public class Event implements Comparable<Event> {
-    /**
-     * Хранение следующего id для автоинкремента при создании объектов
-     */
-    private static Integer nextId = 1;
     private Integer id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
     private String description; //Длина строки не должна быть больше 1573, Поле не может быть null
     private EventType eventType; //Поле может быть null
-
-    public Event(String name,
-                 String description,
-                 EventType eventType) throws InvalidInputFieldException {
-        setId(nextId++);
-        setName(name);
-        setDescription(description);
-        setEventType(eventType);
-    }
 
     @JsonCreator
     public Event(@JsonProperty("id") Integer id,
@@ -44,8 +31,8 @@ public class Event implements Comparable<Event> {
      * @param outputWriter - способ печати ответа
      * @param inputReader  - способ считывания входных данных
      */
-    public static Event createEvent(OutputWriter outputWriter, InputReader inputReader) throws InvalidInputFieldException {
-        Event event = new Event(".", "", null);
+    public static Event createEvent(OutputWriter outputWriter, InputReader inputReader, Integer id) throws InvalidInputFieldException {
+        Event event = new Event(id, ".", "", null);
         outputWriter.writeOnSuccess("Ввод события");
 
         outputWriter.writeOnSuccess("Введите название события: ");
@@ -61,20 +48,6 @@ public class Event implements Comparable<Event> {
         event.setEventType(EventType.createEventType(outputWriter, inputReader));
 
         return event;
-    }
-
-    public static Integer getNextId() {
-        return nextId;
-    }
-
-    public static void setNextId(Integer newNextId) throws InvalidInputFieldException {
-        if (newNextId <= 0) {
-            throw new InvalidInputFieldException("ID события должен быть больше 0");
-        }
-        if (newNextId < nextId) {
-            throw new InvalidInputFieldException("nextID события не может стать меньше");
-        }
-        nextId = newNextId;
     }
 
     @Override

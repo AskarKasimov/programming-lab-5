@@ -3,7 +3,6 @@ package ru.askar.lab5.command;
 import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.collection.CollectionManager;
 import ru.askar.lab5.exception.InvalidInputFieldException;
-import ru.askar.lab5.object.Event;
 import ru.askar.lab5.object.Ticket;
 
 public class ReplaceIfGreaterCommand extends Command {
@@ -25,9 +24,7 @@ public class ReplaceIfGreaterCommand extends Command {
             return;
         }
 
-        Ticket newTicket = Ticket.createTicket(outputWriter, inputReader, null, args[0], Long.parseLong(args[1]));
-        Ticket.setNextId(newTicket.getId() - 1);
-        if (newTicket.getEvent() != null) Event.setNextId(newTicket.getEvent().getId() - 1);
+        Ticket newTicket = Ticket.createTicket(outputWriter, inputReader, 1L, args[0], Long.parseLong(args[1]), collectionManager.generateNextEventId());
 
         if (oldTicket.compareTo(newTicket) < 0) {
             collectionManager.getCollection().put(id, newTicket);

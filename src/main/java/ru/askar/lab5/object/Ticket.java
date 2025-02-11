@@ -10,10 +10,6 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Ticket implements Comparable<Ticket> {
-    /**
-     * Хранение следующего id для автоинкремента при создании объектов
-     */
-    private static Long nextId = 1L;
     private final java.time.LocalDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
     private Long id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
@@ -40,52 +36,25 @@ public class Ticket implements Comparable<Ticket> {
     }
 
     /**
-     * Создание экземпляра с автоинкрементным id.
-     */
-    public Ticket(String name, Coordinates coordinates, long price, TicketType type, Event event) throws InvalidInputFieldException {
-        this(nextId++, name, coordinates, price, type, event);
-    }
-
-    /**
      * Создание экземпляра с пользовательским вводом.
      * Параметры помимо <code>name</code> и <code>price</code> будут считываться из заданного метода
      *
      * @param outputWriter - способ печати ответа
      * @param inputReader  - способ считывания входных данных
-     * @param id           - желаемый id билета. <code>null</code>, если автоинкремент
+     * @param ticketId     - желаемый id билета. <code>null</code>, если автоинкремент
      * @param name         - название
      * @param price        - цена
      * @return - созданный Ticket
      */
-    public static Ticket createTicket(OutputWriter outputWriter, InputReader inputReader, Long id, String name, long price) throws InvalidInputFieldException {
+    public static Ticket createTicket(OutputWriter outputWriter, InputReader inputReader, Long ticketId, String name, long price, Integer eventId) throws InvalidInputFieldException {
         Coordinates coordinates = Coordinates.createCoordinates(outputWriter, inputReader);
         TicketType ticketType = TicketType.createTicketType(outputWriter, inputReader);
         outputWriter.writeOnSuccess("Хотите ввести событие? (y/n): ");
         if (!inputReader.getInputString().equals("y")) {
-            if (id == null) {
-                return new Ticket(name, coordinates, price, ticketType, null);
-            }
-            return new Ticket(id, name, coordinates, price, ticketType, null);
+            return new Ticket(ticketId, name, coordinates, price, ticketType, null);
         }
-        Event event = Event.createEvent(outputWriter, inputReader);
-        if (id == null) {
-            return new Ticket(name, coordinates, price, ticketType, event);
-        }
-        return new Ticket(id, name, coordinates, price, ticketType, event);
-    }
-
-    public static Long getNextId() {
-        return nextId;
-    }
-
-    public static void setNextId(Long newNextId) {
-        if (newNextId <= 0) {
-            throw new IllegalArgumentException("ID билета должен быть больше 0");
-        }
-        if (newNextId < nextId) {
-            throw new IllegalArgumentException("nextID билета не может стать меньше");
-        }
-        nextId = newNextId;
+        Event event = Event.createEvent(outputWriter, inputReader, eventId);
+        return new Ticket(ticketId, name, coordinates, price, ticketType, event);
     }
 
     @Override
