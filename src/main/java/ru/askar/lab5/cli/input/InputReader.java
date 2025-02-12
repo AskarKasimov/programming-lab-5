@@ -7,6 +7,7 @@ import ru.askar.lab5.exception.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 
 public class InputReader {
     /**
@@ -49,13 +50,16 @@ public class InputReader {
     /**
      * Считыватель ввода числа с плавающей точкой.
      *
-     * @return - число с точкой, введенное пользователем.
-     * @throws IllegalArgumentException - если ввод некорректен.
-     * @see BufferedReader
+     * @see ru.askar.lab5.object.Coordinates
      */
     public float getInputFloat() {
+        // Сделано по большей части для Y и ограничения на 654.00000000000001 и прочую дичь
         try {
-            return Float.parseFloat(bufferedReader.readLine());
+            float value = new BigDecimal(bufferedReader.readLine()).floatValue();
+            if (Float.isInfinite(value)) {
+                throw new IllegalArgumentException("Число слишком большое");
+            }
+            return value;
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Требуется число с точкой");
         } catch (IOException e) {
@@ -86,6 +90,8 @@ public class InputReader {
             } catch (CollectionIsEmptyException | NoSuchCommandException | IOException |
                      NoSuchKeyException | IllegalArgumentException | InvalidInputFieldException e) {
                 commandExecutor.getOutputWriter().writeOnFail(e.getMessage());
+            } catch (UserRejectedToFillFieldsException e) {
+                commandExecutor.getOutputWriter().writeOnWarning("Возврат в CLI");
             } catch (ExitCLIException e) {
                 break;
             } finally {

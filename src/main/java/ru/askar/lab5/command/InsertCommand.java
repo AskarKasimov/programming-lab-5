@@ -3,6 +3,7 @@ package ru.askar.lab5.command;
 import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.collection.CollectionManager;
 import ru.askar.lab5.exception.InvalidInputFieldException;
+import ru.askar.lab5.exception.UserRejectedToFillFieldsException;
 import ru.askar.lab5.object.Ticket;
 
 public class InsertCommand extends Command {
@@ -16,7 +17,7 @@ public class InsertCommand extends Command {
     }
 
     @Override
-    public void execute(String[] args) throws InvalidInputFieldException {
+    public void execute(String[] args) throws InvalidInputFieldException, UserRejectedToFillFieldsException {
         String name = args[1];
         long price;
         try {

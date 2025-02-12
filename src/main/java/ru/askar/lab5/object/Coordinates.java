@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.cli.output.OutputWriter;
 import ru.askar.lab5.exception.InvalidInputFieldException;
+import ru.askar.lab5.exception.UserRejectedToFillFieldsException;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -14,17 +15,14 @@ public class Coordinates {
     private Float x; //Поле не может быть null
     private Float y; //Максимальное значение поля: 654, Поле не может быть null
 
-    public Coordinates(Float x,
-                       Float y) throws InvalidInputFieldException {
-        setX(x);
-        setY(y);
-    }
-
     @JsonCreator
     public Coordinates(@JsonProperty("x") Float x,
                        @JsonProperty("y") BigDecimal y) throws InvalidInputFieldException {
         setX(x);
         setY(y);
+    }
+
+    private Coordinates() {
     }
 
     /**
@@ -34,17 +32,50 @@ public class Coordinates {
      * @param inputReader  - способ считывания входных данных
      * @return - созданный Coordinates
      */
-    public static Coordinates createCoordinates(OutputWriter outputWriter, InputReader inputReader) throws InvalidInputFieldException {
-        Coordinates coordinates = new Coordinates((float) 0, (float) 0);
-        outputWriter.writeOnSuccess("Ввод координат");
-
-        outputWriter.writeOnSuccess("Введите координату x: ");
-        coordinates.setX(inputReader.getInputFloat());
-
-        outputWriter.writeOnSuccess("Введите координату y: ");
-        coordinates.setY(inputReader.getInputFloat());
-
+    public static Coordinates createCoordinates(OutputWriter outputWriter, InputReader inputReader) throws UserRejectedToFillFieldsException {
+        Coordinates coordinates = new Coordinates();
+        outputWriter.write("Ввод координат");
+        coordinates.requestX(outputWriter, inputReader);
+        coordinates.requestY(outputWriter, inputReader);
         return coordinates;
+    }
+
+    private void requestX(OutputWriter outputWriter, InputReader inputReader) throws UserRejectedToFillFieldsException {
+        Float x;
+        do {
+            outputWriter.write("Введите координату x: ");
+            try {
+                x = inputReader.getInputFloat();
+                this.setX(x);
+            } catch (InvalidInputFieldException | IllegalArgumentException e) {
+                x = null;
+                outputWriter.writeOnFail(e.getMessage());
+                outputWriter.writeOnWarning("Хотите попробовать еще раз? (y/n): ");
+                String answer = inputReader.getInputString();
+                if (answer != null && !answer.equals("y")) {
+                    throw new UserRejectedToFillFieldsException();
+                }
+            }
+        } while (x == null);
+    }
+
+    private void requestY(OutputWriter outputWriter, InputReader inputReader) throws UserRejectedToFillFieldsException {
+        Float y;
+        do {
+            outputWriter.write("Введите координату y: ");
+            try {
+                y = inputReader.getInputFloat();
+                this.setY(y);
+            } catch (InvalidInputFieldException | IllegalArgumentException e) {
+                y = null;
+                outputWriter.writeOnFail(e.getMessage());
+                outputWriter.writeOnWarning("Хотите попробовать еще раз? (y/n): ");
+                String answer = inputReader.getInputString();
+                if (answer != null && !answer.equals("y")) {
+                    throw new UserRejectedToFillFieldsException();
+                }
+            }
+        } while (y == null);
     }
 
     @Override
@@ -71,6 +102,9 @@ public class Coordinates {
     }
 
     public void setX(Float x) throws InvalidInputFieldException {
+        if (x.isInfinite()) {
+            throw new InvalidInputFieldException("Координата X слишком большая");
+        }
         if (x == null) {
             throw new InvalidInputFieldException("Координата X не может быть null");
         }
@@ -86,6 +120,9 @@ public class Coordinates {
         if (y == null) {
             throw new InvalidInputFieldException("Координата Y не может быть null");
         }
+        if (y.isInfinite()) {
+            throw new InvalidInputFieldException("Координата Y слишком большая");
+        }
         if (y > 654) {
             throw new InvalidInputFieldException("Координата Y не может быть больше 654");
         }
@@ -95,6 +132,9 @@ public class Coordinates {
     public void setY(BigDecimal y) throws InvalidInputFieldException {
         if (y == null) {
             throw new InvalidInputFieldException("Координата Y не может быть null");
+        }
+        if (Float.valueOf(y.floatValue()).isInfinite()) {
+            throw new InvalidInputFieldException("Координата Y слишком большая");
         }
         if (y.compareTo(new BigDecimal("654.0")) > 0) {
             throw new InvalidInputFieldException("Координата Y не может быть больше 654.0");

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.cli.output.OutputWriter;
 import ru.askar.lab5.exception.InvalidInputFieldException;
+import ru.askar.lab5.exception.UserRejectedToFillFieldsException;
 
 import java.util.Objects;
 
@@ -25,29 +26,68 @@ public class Event implements Comparable<Event> {
         setEventType(eventType);
     }
 
+    private Event() {
+    }
+
     /**
      * Создание экземпляра с пользовательским вводом.
      *
      * @param outputWriter - способ печати ответа
      * @param inputReader  - способ считывания входных данных
      */
-    public static Event createEvent(OutputWriter outputWriter, InputReader inputReader, Integer id) throws InvalidInputFieldException {
-        Event event = new Event(id, ".", "", null);
+    public static Event createEvent(OutputWriter outputWriter, InputReader inputReader, Integer id) throws InvalidInputFieldException, UserRejectedToFillFieldsException {
+        Event event = new Event();
         outputWriter.writeOnSuccess("Ввод события");
-
-        outputWriter.writeOnSuccess("Введите название события: ");
-        event.setName(inputReader.getInputString());
-
-        outputWriter.writeOnSuccess("Введите описание события: ");
-        event.setDescription(inputReader.getInputString());
-
-        outputWriter.writeOnSuccess("Хотите ввести тип события? (y/n): ");
-        if (!inputReader.getInputString().equals("y")) {
-            return event;
-        }
-        event.setEventType(EventType.createEventType(outputWriter, inputReader));
-
+        event.requestName(outputWriter, inputReader);
+        event.requestDescription(outputWriter, inputReader);
+        event.requestEventType(outputWriter, inputReader);
         return event;
+    }
+
+    private void requestName(OutputWriter outputWriter, InputReader inputReader) throws UserRejectedToFillFieldsException {
+        String name;
+        do {
+            outputWriter.write("Введите название события: ");
+            try {
+                name = inputReader.getInputString();
+                this.setName(name);
+            } catch (InvalidInputFieldException e) {
+                name = null;
+                outputWriter.writeOnFail(e.getMessage());
+                outputWriter.writeOnWarning("Хотите попробовать еще раз? (y/n): ");
+                String answer = inputReader.getInputString();
+                if (answer != null && !answer.equals("y")) {
+                    throw new UserRejectedToFillFieldsException();
+                }
+            }
+        } while (name == null);
+    }
+
+    private void requestDescription(OutputWriter outputWriter, InputReader inputReader) throws UserRejectedToFillFieldsException {
+        String description;
+        do {
+            outputWriter.write("Введите описание события: ");
+            try {
+                description = inputReader.getInputString();
+                this.setDescription(description);
+            } catch (InvalidInputFieldException e) {
+                description = null;
+                outputWriter.writeOnFail(e.getMessage());
+                outputWriter.writeOnWarning("Хотите попробовать еще раз? (y/n): ");
+                String answer = inputReader.getInputString();
+                if (answer != null && !answer.equals("y")) {
+                    throw new UserRejectedToFillFieldsException();
+                }
+            }
+        } while (description == null);
+    }
+
+    private void requestEventType(OutputWriter outputWriter, InputReader inputReader) throws UserRejectedToFillFieldsException {
+        outputWriter.writeOnWarning("Хотите ввести тип события? (y/n): ");
+        String answer = inputReader.getInputString();
+        if (answer != null && answer.equals("y")) {
+            setEventType(EventType.createEventType(outputWriter, inputReader));
+        }
     }
 
     @Override
@@ -95,8 +135,11 @@ public class Event implements Comparable<Event> {
     }
 
     public void setName(String name) throws InvalidInputFieldException {
-        if (name == null || name.isEmpty()) {
-            throw new InvalidInputFieldException("Название события не может быть null или пустым");
+        if (name == null) {
+            throw new InvalidInputFieldException("Название события не может быть null");
+        }
+        if (name.isEmpty()) {
+            throw new InvalidInputFieldException("Название события не может быть пустым");
         }
         this.name = name;
     }
@@ -106,8 +149,11 @@ public class Event implements Comparable<Event> {
     }
 
     public void setDescription(String description) throws InvalidInputFieldException {
-        if (description == null || description.length() > 1573) {
+        if (description == null) {
             throw new InvalidInputFieldException("Описание события не может быть null");
+        }
+        if (description.length() > 1573) {
+            throw new InvalidInputFieldException("Длина описания события не должна быть больше 1573");
         }
         this.description = description;
     }

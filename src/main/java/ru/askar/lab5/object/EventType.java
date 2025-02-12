@@ -2,6 +2,7 @@ package ru.askar.lab5.object;
 
 import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.cli.output.OutputWriter;
+import ru.askar.lab5.exception.UserRejectedToFillFieldsException;
 
 public enum EventType {
     E_SPORTS,
@@ -32,13 +33,22 @@ public enum EventType {
      * @param inputReader  - способ считывания входных данных
      * @return требуемый EventType
      */
-    public static EventType createEventType(OutputWriter outputWriter, InputReader inputReader) {
-        outputWriter.writeOnSuccess("Выберите тип события (" + getStringValues() + "): ");
+    public static EventType createEventType(OutputWriter outputWriter, InputReader inputReader) throws UserRejectedToFillFieldsException {
+        outputWriter.write("Выберите тип события (" + getStringValues() + "): ");
         EventType eventType;
         try {
-            eventType = valueOf(inputReader.getInputString());
+            String value = inputReader.getInputString();
+            if (value == null) {
+                throw new IllegalArgumentException();
+            }
+            eventType = valueOf(value);
         } catch (IllegalArgumentException e) {
-            outputWriter.writeOnFail("Такого типа нет. Попробуйте еще раз:");
+            outputWriter.writeOnFail("Такого типа нет");
+            outputWriter.writeOnWarning("Хотите попробовать еще раз? (y/n): ");
+            String answer = inputReader.getInputString();
+            if (answer != null && !answer.equals("y")) {
+                throw new UserRejectedToFillFieldsException();
+            }
             return createEventType(outputWriter, inputReader);
         }
         return eventType;

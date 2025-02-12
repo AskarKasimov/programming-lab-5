@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.cli.output.OutputWriter;
 import ru.askar.lab5.exception.InvalidInputFieldException;
+import ru.askar.lab5.exception.UserRejectedToFillFieldsException;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -18,14 +19,8 @@ public class Ticket implements Comparable<Ticket> {
     private TicketType type; //Поле не может быть null
     private Event event; //Поле может быть null
 
-    /**
-     * Создание экземпляра с заданным id, если такого ещё не было
-     *
-     * @throws IllegalArgumentException - если данный id невозможен
-     */
     @JsonCreator
     public Ticket(@JsonProperty("id") Long id, @JsonProperty("name") String name, @JsonProperty("coordinates") Coordinates coordinates, @JsonProperty("price") long price, @JsonProperty("type") TicketType type, @JsonProperty("event") Event event) throws InvalidInputFieldException {
-//        if (id < nextId) throw new IllegalArgumentException("Билет с таким id уже был");
         setId(id);
         setName(name);
         setCoordinates(coordinates);
@@ -35,26 +30,38 @@ public class Ticket implements Comparable<Ticket> {
         setEvent(event);
     }
 
+    private Ticket(Long ticketId, String name, long price) throws InvalidInputFieldException {
+        setId(ticketId);
+        setName(name);
+        setPrice(price);
+        this.creationDate = LocalDateTime.now();
+    }
+
     /**
      * Создание экземпляра с пользовательским вводом.
      * Параметры помимо <code>name</code> и <code>price</code> будут считываться из заданного метода
      *
      * @param outputWriter - способ печати ответа
      * @param inputReader  - способ считывания входных данных
-     * @param ticketId     - желаемый id билета. <code>null</code>, если автоинкремент
+     * @param ticketId     - id билета
      * @param name         - название
      * @param price        - цена
      * @return - созданный Ticket
      */
-    public static Ticket createTicket(OutputWriter outputWriter, InputReader inputReader, Long ticketId, String name, long price, Integer eventId) throws InvalidInputFieldException {
-        Coordinates coordinates = Coordinates.createCoordinates(outputWriter, inputReader);
-        TicketType ticketType = TicketType.createTicketType(outputWriter, inputReader);
-        outputWriter.writeOnSuccess("Хотите ввести событие? (y/n): ");
-        if (!inputReader.getInputString().equals("y")) {
-            return new Ticket(ticketId, name, coordinates, price, ticketType, null);
+    public static Ticket createTicket(OutputWriter outputWriter, InputReader inputReader, Long ticketId, String name, long price, Integer eventId) throws InvalidInputFieldException, UserRejectedToFillFieldsException {
+        Ticket ticket = new Ticket(ticketId, name, price);
+        ticket.setCoordinates(Coordinates.createCoordinates(outputWriter, inputReader));
+        ticket.setType(TicketType.createTicketType(outputWriter, inputReader));
+        ticket.requestEvent(outputWriter, inputReader, eventId);
+        return ticket;
+    }
+
+    private void requestEvent(OutputWriter outputWriter, InputReader inputReader, Integer eventId) throws InvalidInputFieldException, UserRejectedToFillFieldsException {
+        outputWriter.writeOnWarning("Хотите ввести событие? (y/n): ");
+        String answer = inputReader.getInputString();
+        if (answer != null && answer.equals("y")) {
+            this.setEvent(Event.createEvent(outputWriter, inputReader, eventId));
         }
-        Event event = Event.createEvent(outputWriter, inputReader, eventId);
-        return new Ticket(ticketId, name, coordinates, price, ticketType, event);
     }
 
     @Override

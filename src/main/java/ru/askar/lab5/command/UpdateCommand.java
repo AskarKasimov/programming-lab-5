@@ -3,6 +3,7 @@ package ru.askar.lab5.command;
 import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.collection.CollectionManager;
 import ru.askar.lab5.exception.InvalidInputFieldException;
+import ru.askar.lab5.exception.UserRejectedToFillFieldsException;
 import ru.askar.lab5.object.Ticket;
 
 public class UpdateCommand extends Command {
@@ -16,7 +17,7 @@ public class UpdateCommand extends Command {
     }
 
     @Override
-    public void execute(String[] args) throws InvalidInputFieldException {
+    public void execute(String[] args) throws InvalidInputFieldException, UserRejectedToFillFieldsException {
         Long id = Long.parseLong(args[0]);
         Ticket oldTicket = collectionManager.getCollection().get(id);
         if (oldTicket == null) {
@@ -30,7 +31,7 @@ public class UpdateCommand extends Command {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("В поле price требуется число");
         }
-        outputWriter.writeOnSuccess("Хотите изменить прочие данные? (y/n): ");
+        outputWriter.writeOnSuccess("Хотите изменить данные, помимо названия и цены? (y/n): ");
         if (inputReader.getInputString().equals("y")) {
             Ticket newTicket = Ticket.createTicket(outputWriter, inputReader, id, name, price, collectionManager.generateNextEventId());
             collectionManager.getCollection().put(id, newTicket);
