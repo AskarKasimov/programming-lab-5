@@ -26,7 +26,8 @@ public class Event implements Comparable<Event> {
         setEventType(eventType);
     }
 
-    private Event() {
+    private Event(Integer id) throws InvalidInputFieldException {
+        setId(id);
     }
 
     /**
@@ -35,8 +36,8 @@ public class Event implements Comparable<Event> {
      * @param outputWriter - способ печати ответа
      * @param inputReader  - способ считывания входных данных
      */
-    public static Event createEvent(OutputWriter outputWriter, InputReader inputReader, Integer id) throws InvalidInputFieldException, UserRejectedToFillFieldsException {
-        Event event = new Event();
+    public static Event createEvent(OutputWriter outputWriter, InputReader inputReader, Integer id) throws UserRejectedToFillFieldsException, InvalidInputFieldException {
+        Event event = new Event(id);
         outputWriter.writeOnSuccess("Ввод события");
         event.requestName(outputWriter, inputReader);
         event.requestDescription(outputWriter, inputReader);

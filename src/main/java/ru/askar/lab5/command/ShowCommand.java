@@ -4,7 +4,6 @@ import com.github.freva.asciitable.AsciiTable;
 import com.github.freva.asciitable.Column;
 import com.github.freva.asciitable.HorizontalAlign;
 import ru.askar.lab5.collection.CollectionManager;
-import ru.askar.lab5.exception.CollectionIsEmptyException;
 import ru.askar.lab5.object.Ticket;
 
 import java.util.Arrays;
@@ -18,7 +17,7 @@ public class ShowCommand extends Command {
     }
 
     @Override
-    public void execute(String[] args) throws CollectionIsEmptyException {
+    public void execute(String[] args) {
         outputWriter.write(AsciiTable.getTable(collectionManager.getCollection().values(), Arrays.asList(
                 new Column().header("ID").maxWidth(10).headerAlign(HorizontalAlign.CENTER).with(ticket -> String.valueOf(ticket.getId())),
                 new Column().header("Название").maxWidth(10).headerAlign(HorizontalAlign.CENTER).with(Ticket::getName),

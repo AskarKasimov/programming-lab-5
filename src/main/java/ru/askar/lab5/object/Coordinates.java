@@ -102,11 +102,11 @@ public class Coordinates {
     }
 
     public void setX(Float x) throws InvalidInputFieldException {
-        if (x.isInfinite()) {
-            throw new InvalidInputFieldException("Координата X слишком большая");
-        }
         if (x == null) {
             throw new InvalidInputFieldException("Координата X не может быть null");
+        }
+        if (x.isInfinite()) {
+            throw new InvalidInputFieldException("Координата X слишком большая");
         }
         this.x = x;
     }
