@@ -4,9 +4,10 @@ import ru.askar.lab5.object.Event;
 import ru.askar.lab5.object.Ticket;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 /**
  * Manager для коллекции билетов.
@@ -29,9 +30,14 @@ public class CollectionManager {
     }
 
     public Integer generateNextEventId() {
-        List<Integer> eventIds = collection.values().stream().map(Ticket::getEvent).filter(Objects::nonNull).map(Event::getId).toList();
+        Set<Integer> ids = collection.values().stream()
+                .map(Ticket::getEvent)
+                .filter(Objects::nonNull)
+                .map(Event::getId)
+                .collect(Collectors.toSet());
+
         int min = 1;
-        while (eventIds.contains(min)) {
+        while (ids.contains(min)) {
             min++;
         }
         return min;
