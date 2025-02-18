@@ -8,7 +8,6 @@ import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.cli.output.OutputWriter;
 import ru.askar.lab5.cli.output.Stdout;
 import ru.askar.lab5.collection.CollectionManager;
-import ru.askar.lab5.collection.DataReader;
 import ru.askar.lab5.collection.JsonReader;
 import ru.askar.lab5.command.*;
 import ru.askar.lab5.exception.InvalidCollectionFileException;
@@ -25,9 +24,9 @@ public class Main {
         }
         outputWriter.write("Используется файл: " + filePath);
 
-        DataReader dataReader = new JsonReader();
+        CollectionManager collectionManager = null;
         try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(filePath))) {
-            dataReader.readData(bufferedInputStream);
+            collectionManager = new CollectionManager(new JsonReader(filePath), bufferedInputStream);
             outputWriter.writeOnSuccess("Файл успешно захаван:)))");
         } catch (JsonMappingException e) {
             Throwable cause = e.getCause();
@@ -45,7 +44,6 @@ public class Main {
             outputWriter.writeOnWarning("Внимание: используется пустая коллекция");
         }
 
-        CollectionManager collectionManager = new CollectionManager(dataReader.getData());
 
         CommandExecutor commandExecutor = new CommandExecutor(outputWriter);
         CommandParser commandParser = new CommandParser();

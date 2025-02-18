@@ -13,7 +13,12 @@ import java.util.Collections;
 import java.util.TreeMap;
 
 public class JsonReader implements DataReader {
-    private TreeMap<Long, Ticket> collection = new TreeMap<>();
+    private final TreeMap<Long, Ticket> collection = new TreeMap<>();
+    private final String source;
+
+    public JsonReader(String source) {
+        this.source = source;
+    }
 
     @Override
     public void readData(BufferedInputStream inputStream) throws IOException {
@@ -28,11 +33,12 @@ public class JsonReader implements DataReader {
             }
             tickets.put(ticket.getId(), ticket);
         });
-        this.collection = tickets;
+        this.collection.clear();
+        this.collection.putAll(tickets);
         try {
             validateData();
         } catch (InvalidCollectionFileException e) {
-            this.collection = new TreeMap<>();
+            this.collection.clear();
             throw e;
         }
     }
@@ -40,6 +46,11 @@ public class JsonReader implements DataReader {
     @Override
     public TreeMap<Long, Ticket> getData() {
         return collection;
+    }
+
+    @Override
+    public String getSource() {
+        return source;
     }
 
     private void validateData() throws InvalidCollectionFileException {

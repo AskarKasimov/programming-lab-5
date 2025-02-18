@@ -10,4 +10,6 @@ public interface DataReader {
     void readData(BufferedInputStream bufferedInputStream) throws IOException;
 
     TreeMap<Long, Ticket> getData();
+
+    String getSource();
 }

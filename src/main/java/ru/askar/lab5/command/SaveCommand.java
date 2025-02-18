@@ -12,7 +12,7 @@ public class SaveCommand extends Command {
     private final CollectionManager collectionManager;
 
     public SaveCommand(CollectionManager collectionManager) {
-        super("save", 1);
+        super("save", 0);
         this.collectionManager = collectionManager;
     }
 
@@ -22,9 +22,9 @@ public class SaveCommand extends Command {
         objectMapper.registerModule(new JavaTimeModule());
         // Отключаем вывод даты в виде массива
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        try (FileOutputStream fileOutputStream = new FileOutputStream(args[0])) {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(collectionManager.getStarterSource())) {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(fileOutputStream, collectionManager.getCollection().values());
-            outputWriter.writeOnSuccess("JSON успешно записан в файл " + args[0]);
+            outputWriter.writeOnSuccess("JSON успешно записан в первоначальный файл " + collectionManager.getStarterSource());
         } catch (IOException e) {
             throw new IOException("Ошибка при записи коллекции в файл " + e.getMessage());
         }
