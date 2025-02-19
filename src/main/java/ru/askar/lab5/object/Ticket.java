@@ -1,21 +1,27 @@
 package ru.askar.lab5.object;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import ru.askar.lab5.cli.input.InputReader;
+import ru.askar.lab5.cli.output.OutputWriter;
+import ru.askar.lab5.exception.InvalidInputFieldException;
+import ru.askar.lab5.exception.UserRejectedToFillFieldsException;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Ticket implements Comparable<Ticket> {
-    private static Long nextId = 1L; // Для автоинкремента
-    private final Long id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
-    private String name; //Поле не может быть null, Строка не может быть пустой
-    private Coordinates coordinates; //Поле не может быть null
-    private final java.time.LocalDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
-    private long price; //Значение поля должно быть больше 0
-    private TicketType type; //Поле не может быть null
-    private Event event; //Поле может быть null
+    private final java.time.LocalDateTime creationDate; //РџРѕР»Рµ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null, Р—РЅР°С‡РµРЅРёРµ СЌС‚РѕРіРѕ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ РіРµРЅРµСЂРёСЂРѕРІР°С‚СЊСЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё
+    private Long id; //РџРѕР»Рµ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null, Р—РЅР°С‡РµРЅРёРµ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ 0, Р—РЅР°С‡РµРЅРёРµ СЌС‚РѕРіРѕ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СѓРЅРёРєР°Р»СЊРЅС‹Рј, Р—РЅР°С‡РµРЅРёРµ СЌС‚РѕРіРѕ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ РіРµРЅРµСЂРёСЂРѕРІР°С‚СЊСЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё
+    private String name; //РџРѕР»Рµ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null, РЎС‚СЂРѕРєР° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚РѕР№
+    private Coordinates coordinates; //РџРѕР»Рµ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null
+    private long price; //Р—РЅР°С‡РµРЅРёРµ РїРѕР»СЏ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ 0
+    private TicketType type; //РџРѕР»Рµ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null
+    private Event event; //РџРѕР»Рµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null
 
-    public Ticket(String name, Coordinates coordinates, long price, TicketType type, Event event) {
-        this.id = nextId;
-        nextId++;
+    @JsonCreator
+    public Ticket(@JsonProperty("id") Long id, @JsonProperty("name") String name, @JsonProperty("coordinates") Coordinates coordinates, @JsonProperty("price") long price, @JsonProperty("type") TicketType type, @JsonProperty("event") Event event) throws InvalidInputFieldException {
+        setId(id);
         setName(name);
         setCoordinates(coordinates);
         this.creationDate = LocalDateTime.now();
@@ -24,39 +30,38 @@ public class Ticket implements Comparable<Ticket> {
         setEvent(event);
     }
 
-    public void setName(String name) {
-        if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException("Имя не может быть null или пустым");
-        }
-        this.name = name;
+    private Ticket(Long ticketId, String name, long price) throws InvalidInputFieldException {
+        setId(ticketId);
+        setName(name);
+        setPrice(price);
+        this.creationDate = LocalDateTime.now();
     }
 
-    public void setCoordinates(Coordinates coordinates) {
-        if (coordinates == null) {
-            throw new IllegalArgumentException("Координаты не могут быть null");
-        }
-        this.coordinates = coordinates;
+    /**
+     * РЎРѕР·РґР°РЅРёРµ СЌРєР·РµРјРїР»СЏСЂР° СЃ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёРј РІРІРѕРґРѕРј.
+     * РџР°СЂР°РјРµС‚СЂС‹ РїРѕРјРёРјРѕ <code>name</code> Рё <code>price</code> Р±СѓРґСѓС‚ СЃС‡РёС‚С‹РІР°С‚СЊСЃСЏ РёР· Р·Р°РґР°РЅРЅРѕРіРѕ РјРµС‚РѕРґР°
+     *
+     * @param outputWriter - СЃРїРѕСЃРѕР± РїРµС‡Р°С‚Рё РѕС‚РІРµС‚Р°
+     * @param inputReader  - СЃРїРѕСЃРѕР± СЃС‡РёС‚С‹РІР°РЅРёСЏ РІС…РѕРґРЅС‹С… РґР°РЅРЅС‹С…
+     * @param ticketId     - id Р±РёР»РµС‚Р°
+     * @param name         - РЅР°Р·РІР°РЅРёРµ
+     * @param price        - С†РµРЅР°
+     * @return - СЃРѕР·РґР°РЅРЅС‹Р№ Ticket
+     */
+    public static Ticket createTicket(OutputWriter outputWriter, InputReader inputReader, Long ticketId, String name, long price, Integer eventId, boolean scriptMode) throws InvalidInputFieldException, UserRejectedToFillFieldsException {
+        Ticket ticket = new Ticket(ticketId, name, price);
+        ticket.setCoordinates(Coordinates.createCoordinates(outputWriter, inputReader, scriptMode));
+        ticket.setType(TicketType.createTicketType(outputWriter, inputReader, scriptMode));
+        ticket.requestEvent(outputWriter, inputReader, eventId, scriptMode);
+        return ticket;
     }
 
-    public void setPrice(long price) {
-        if (price <= 0) {
-            throw new IllegalArgumentException("Цена должна быть больше 0");
+    private void requestEvent(OutputWriter outputWriter, InputReader inputReader, Integer eventId, boolean scriptMode) throws InvalidInputFieldException, UserRejectedToFillFieldsException {
+        outputWriter.writeOnWarning("РҐРѕС‚РёС‚Рµ РІРІРµСЃС‚Рё СЃРѕР±С‹С‚РёРµ? (y/n): ");
+        String answer = inputReader.getInputString();
+        if (answer != null && answer.equals("y")) {
+            this.setEvent(Event.createEvent(outputWriter, inputReader, eventId, scriptMode));
         }
-        this.price = price;
-    }
-
-    public void setType(TicketType type) {
-        if (type == null) {
-            throw new IllegalArgumentException("Тип билета не может быть null");
-        }
-        this.type = type;
-    }
-
-    public void setEvent(Event event) {
-        if (event == null) {
-            throw new IllegalArgumentException("Событие не может быть null");
-        }
-        this.event = event;
     }
 
     @Override
@@ -71,33 +76,60 @@ public class Ticket implements Comparable<Ticket> {
         return Objects.hash(id, name, coordinates, creationDate, price, type, event);
     }
 
+    /**
+     * РЎСЂР°РІРЅРµРЅРёРµ, СЂРµР°Р»РёР·РѕРІР°РЅРЅРѕРµ С‡РµСЂРµР· СЂР°Р·РЅРёС†Сѓ id'С€РЅРёРєРѕРІ
+     */
     @Override
-    public int compareTo(Ticket o) {
-        return Long.compare(this.id, o.id);
+    public int compareTo(Ticket other) {
+        // РЎРЅР°С‡Р°Р»Р° СЃСЂР°РІРЅРёРІР°РµРј РїРѕ С‚РёРїСѓ Р±РёР»РµС‚Р°
+        int typeComparison = this.type.compareTo(other.type);
+        if (typeComparison != 0) {
+            return typeComparison;
+        }
+
+        // Р•СЃР»Рё С‚РёРїС‹ СЂР°РІРЅС‹, СЃСЂР°РІРЅРёРІР°РµРј РїРѕ С†РµРЅРµ
+        return Long.compare(this.price, other.price);
     }
 
     @Override
     public String toString() {
-        return "Билет" +
-                ": id=" + id +
-                ", название='" + name + "'" +
-                ", координаты=" + coordinates +
-                ", дата создания=" + creationDate +
-                ", цена=" + price +
-                ", тип=" + type +
-                ", событие=" + event + ";";
+        return "Р‘РёР»РµС‚" + ": id=" + id + ", РЅР°Р·РІР°РЅРёРµ='" + name + "'" + ", РєРѕРѕСЂРґРёРЅР°С‚С‹=" + coordinates + ", РґР°С‚Р° СЃРѕР·РґР°РЅРёСЏ=" + creationDate + ", С†РµРЅР°=" + price + ", С‚РёРї=" + type + ", СЃРѕР±С‹С‚РёРµ=" + event + ";";
     }
 
     public Long getId() {
         return id;
     }
 
+    public void setId(Long id) throws InvalidInputFieldException {
+        if (id == null) {
+            throw new InvalidInputFieldException("ID Р±РёР»РµС‚Р° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null");
+        }
+        if (id <= 0) {
+            throw new InvalidInputFieldException("ID Р±РёР»РµС‚Р° РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ 0");
+        }
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
 
+    public void setName(String name) throws InvalidInputFieldException {
+        if (name == null || name.isEmpty()) {
+            throw new InvalidInputFieldException("РќР°Р·РІР°РЅРёРµ Р±РёР»РµС‚Р° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null РёР»Рё РїСѓСЃС‚С‹Рј");
+        }
+        this.name = name;
+    }
+
     public Coordinates getCoordinates() {
         return coordinates;
+    }
+
+    public void setCoordinates(Coordinates coordinates) throws InvalidInputFieldException {
+        if (coordinates == null) {
+            throw new InvalidInputFieldException("РљРѕРѕСЂРґРёРЅР°С‚С‹ Р±РёР»РµС‚Р° РЅРµ РјРѕРіСѓС‚ Р±С‹С‚СЊ null");
+        }
+        this.coordinates = coordinates;
     }
 
     public LocalDateTime getCreationDate() {
@@ -108,11 +140,29 @@ public class Ticket implements Comparable<Ticket> {
         return price;
     }
 
+    public void setPrice(long price) throws InvalidInputFieldException {
+        if (price <= 0) {
+            throw new InvalidInputFieldException("Р¦РµРЅР° Р±РёР»РµС‚Р° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ 0");
+        }
+        this.price = price;
+    }
+
     public TicketType getType() {
         return type;
     }
 
+    public void setType(TicketType type) throws InvalidInputFieldException {
+        if (type == null) {
+            throw new InvalidInputFieldException("РўРёРї Р±РёР»РµС‚Р° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ null");
+        }
+        this.type = type;
+    }
+
     public Event getEvent() {
         return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
     }
 }

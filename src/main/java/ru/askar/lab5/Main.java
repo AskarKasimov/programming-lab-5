@@ -6,51 +6,84 @@ import ru.askar.lab5.cli.CommandParser;
 import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.cli.output.OutputWriter;
 import ru.askar.lab5.cli.output.Stdout;
-import ru.askar.lab5.collection.CollectionStorage;
+import ru.askar.lab5.collection.CollectionManager;
+import ru.askar.lab5.collection.DataReader;
+import ru.askar.lab5.collection.JsonReader;
 import ru.askar.lab5.command.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
+import java.io.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        System.setOut(new PrintStream(System.out, true, "CP1251"));
-
+    public static void main(String[] args) {
         OutputWriter outputWriter = new Stdout();
+        String filePath = System.getenv("lab5");
+        if (filePath == null || filePath.isEmpty()) {
+            outputWriter.writeOnFail("Переменная окружения lab5 не установлена");
+            return;
+        }
+        outputWriter.writeOnSuccess("Используется файл: " + filePath);
+
+        BufferedInputStream bufferedInputStream = null;
+        try {
+            bufferedInputStream = new BufferedInputStream(new FileInputStream(filePath));
+        } catch (FileNotFoundException | SecurityException e) {
+            outputWriter.writeOnFail("Файл не удаётся прочитать: " + e.getMessage());
+        }
+
+        DataReader dataReader = new JsonReader(filePath, bufferedInputStream);
+        if (bufferedInputStream == null) {
+            dataReader = null;
+        }
+
+        CollectionManager collectionManager = null;
+        try {
+            collectionManager = new CollectionManager(dataReader);
+        } catch (Exception e) {
+            outputWriter.writeOnFail(e.getMessage());
+        } finally {
+            try {
+                if (bufferedInputStream != null) bufferedInputStream.close();
+            } catch (IOException e) {
+                outputWriter.writeOnFail("Ошибка при закрытии файла: " + e.getMessage());
+            }
+        }
+        if (collectionManager == null) {
+            try {
+                collectionManager = new CollectionManager(null);
+            } catch (Exception e) {
+                // ignored
+            }
+        }
+        if (collectionManager.getCollection().isEmpty()) {
+            outputWriter.writeOnWarning("Коллекция пуста");
+        }
         CommandExecutor commandExecutor = new CommandExecutor(outputWriter);
         CommandParser commandParser = new CommandParser();
 
-        commandExecutor.register(new HelpCommand(commandExecutor));
-        commandExecutor.register(new InfoCommand());
-        commandExecutor.register(new ShowCommand());
-//        commandExecutor.register(new AddCommand());
-//        commandExecutor.register(new UpdateCommand());
-        commandExecutor.register(new RemoveByIdCommand());
-        commandExecutor.register(new ClearCommand());
-        commandExecutor.register(new SaveCommand());
-        commandExecutor.register(new ScriptCommand(commandExecutor, commandParser));
-        commandExecutor.register(new ExitCommand());
-        commandExecutor.register(new RemoveByIndexCommand());
-        commandExecutor.register(new ShuffleCommand());
-        commandExecutor.register(new ReorderCommand());
-//        commandExecutor.register(new RemoveByFrontManCommand());
-        commandExecutor.register(new CountByNumberOfParticipantsCommand());
-        commandExecutor.register(new FilterByAlbumsCountCommand());
-
-        InputReader inputReader = new InputReader(commandExecutor, commandParser);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        InputReader inputReader = new InputReader(commandExecutor, commandParser, bufferedReader);
 
-        String filePath = System.getenv("lab5");
+        commandExecutor.register(new HelpCommand(commandExecutor, inputReader));
+        commandExecutor.register(new InfoCommand(collectionManager, inputReader));
+        commandExecutor.register(new ShowCommand(collectionManager, inputReader));
+        commandExecutor.register(new InsertCommand(collectionManager, inputReader));
+        commandExecutor.register(new UpdateCommand(collectionManager, inputReader));
+        commandExecutor.register(new RemoveByKeyCommand(collectionManager, inputReader));
+        commandExecutor.register(new ClearCommand(collectionManager, inputReader));
+        commandExecutor.register(new SaveCommand(collectionManager, inputReader));
+        commandExecutor.register(new ScriptCommand(commandExecutor, inputReader));
+        commandExecutor.register(new ExitCommand(inputReader));
+        commandExecutor.register(new RemoveLowerCommand(collectionManager, inputReader));
+        commandExecutor.register(new ReplaceIfGreaterCommand(collectionManager, inputReader));
+        commandExecutor.register(new RemoveGreaterKeyCommand(collectionManager, inputReader));
+        commandExecutor.register(new FilterStartsWithNameCommand(collectionManager, inputReader));
+        commandExecutor.register(new PrintFieldAscendingEventCommand(collectionManager, inputReader));
+        commandExecutor.register(new PrintFieldDescendingTypeCommand(collectionManager, inputReader));
 
-        if (filePath == null || filePath.isEmpty()) {
-            System.out.println("Переменная окружения lab5 не установлена");
-            return;
+        try {
+            inputReader.process();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-
-        CollectionStorage.getInstance().loadFromFile(filePath);
-
-        inputReader.process(bufferedReader);
     }
 }

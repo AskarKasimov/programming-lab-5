@@ -1,26 +1,56 @@
 package ru.askar.lab5.command;
 
+import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.cli.output.OutputWriter;
-import ru.askar.lab5.exception.CantChangeOutputWriterException;
-import ru.askar.lab5.exception.CollectionIsEmptyException;
-import ru.askar.lab5.exception.ExitCLIException;
-import ru.askar.lab5.exception.NoSuchIdException;
+import ru.askar.lab5.exception.*;
 
 import java.io.IOException;
 
+/**
+ * Абстрактный класс для команд
+ */
 public abstract class Command {
     protected final int argsCount;
     protected final String name;
     protected OutputWriter outputWriter;
+    protected boolean scriptMode = false;
+    protected InputReader inputReader;
 
-    public Command(String name, int argsCount) {
+    /**
+     * Заполнение имени и количества требуемых аргументов
+     *
+     * @param name
+     * @param argsCount
+     */
+    public Command(String name, int argsCount, InputReader inputReader) {
         this.name = name;
         this.argsCount = argsCount;
+        this.inputReader = inputReader;
     }
 
-    public abstract void execute(String[] args) throws NoSuchIdException, IOException, CollectionIsEmptyException, ExitCLIException;
+    public void setInputReader(InputReader inputReader) {
+        this.inputReader = inputReader;
+    }
 
-    public abstract String getInfo(); // Получить информацию о команде
+    public void setScriptMode(boolean scriptMode) {
+        this.scriptMode = scriptMode;
+    }
+
+    /**
+     * Выполнение логики команды
+     *
+     * @param args - аргументы
+     * @throws IOException                - ошибка чтения ввода
+     * @throws CollectionIsEmptyException - коллекция пуста
+     * @throws ExitCLIException           - выход из CLI
+     * @throws NoSuchKeyException         - нет такого ключа в коллекции, на который пытается сослаться команда
+     */
+    public abstract void execute(String[] args) throws IOException, CollectionIsEmptyException, ExitCLIException, NoSuchKeyException, InvalidInputFieldException, UserRejectedToFillFieldsException;
+
+    /**
+     * Выдать справку об использовании команды
+     */
+    public abstract String getInfo();
 
     public String getName() {
         return name;
@@ -30,8 +60,12 @@ public abstract class Command {
         return argsCount;
     }
 
+    /**
+     * Задать вывод результата исполнения команды
+     *
+     * @see OutputWriter
+     */
     public void setOutputWriter(OutputWriter newOutputWriter) {
-        if (outputWriter != null) throw new CantChangeOutputWriterException();
         outputWriter = newOutputWriter;
     }
 }
