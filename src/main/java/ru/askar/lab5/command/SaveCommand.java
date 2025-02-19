@@ -1,31 +1,43 @@
 package ru.askar.lab5.command;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import ru.askar.lab5.collection.CollectionStorage;
-import ru.askar.lab5.collection.LocalDateTimeAdapter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import ru.askar.lab5.cli.input.InputReader;
+import ru.askar.lab5.collection.CollectionManager;
 
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 public class SaveCommand extends Command {
-    public SaveCommand() {
-        super("save", 1);
+    private final CollectionManager collectionManager;
+    private final InputReader inputReader;
+
+    public SaveCommand(CollectionManager collectionManager, InputReader inputReader) {
+        super("save", 0, inputReader);
+        this.collectionManager = collectionManager;
+        this.inputReader = inputReader;
     }
 
     @Override
     public void execute(String[] args) throws IOException {
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                .create();
-
-        String filePath = args[0];
-        // TODO: обрабатывать ситуации с неправильным количеством аргументов
-        FileWriter writer = new FileWriter(filePath);
-        gson.toJson(CollectionStorage.getInstance().getCollection(), writer); // Преобразуем коллекцию в JSON и записываем в файл
-        outputWriter.writeOnSuccess("Коллекция успешно записана в файл: " + filePath);
+        String newFileName;
+        if (collectionManager.getStarterSource() == null || collectionManager.getStarterSource().isEmpty()) {
+            outputWriter.writeOnFail("Невозможно сохранить коллекцию в файл, так как исходный файл не был указан. Введите новое имя файла:");
+            newFileName = inputReader.getInputString();
+        } else {
+            newFileName = collectionManager.getStarterSource();
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        // Отключаем вывод даты в виде массива
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        try (FileOutputStream fileOutputStream = new FileOutputStream(newFileName)) {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(fileOutputStream, collectionManager.getCollection().values());
+            outputWriter.writeOnSuccess("JSON успешно записан в первоначальный файл " + newFileName);
+        } catch (IOException e) {
+            throw new IOException("Ошибка при записи коллекции в файл " + e.getMessage());
+        }
     }
 
     @Override

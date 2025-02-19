@@ -1,17 +1,21 @@
 package ru.askar.lab5.command;
 
-import ru.askar.lab5.collection.CollectionStorage;
+import ru.askar.lab5.cli.input.InputReader;
+import ru.askar.lab5.collection.CollectionManager;
 
 public class InfoCommand extends Command {
-    public InfoCommand() {
-        super("info", 0);
+    private final CollectionManager collectionManager;
+
+    public InfoCommand(CollectionManager collectionManager, InputReader inputReader) {
+        super("info", 0, inputReader);
+        this.collectionManager = collectionManager;
     }
 
     @Override
     public void execute(String[] args) {
-        outputWriter.writeOnSuccess("Тип коллекции: " + CollectionStorage.getInstance().getCollection().getClass());
-        outputWriter.writeOnSuccess("Дата инициализации: " + CollectionStorage.getInstance().getDateOfCreation());
-        outputWriter.writeOnSuccess("Количество элементов: " + CollectionStorage.getInstance().getCollection().size());
+        outputWriter.writeOnSuccess("Тип коллекции: " + collectionManager.getCollection().getClass());
+        outputWriter.writeOnSuccess("Дата инициализации: " + collectionManager.getDateOfCreation());
+        outputWriter.writeOnSuccess("Количество элементов: " + collectionManager.getCollection().size());
     }
 
     @Override
