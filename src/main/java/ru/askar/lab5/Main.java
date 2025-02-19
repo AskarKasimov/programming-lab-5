@@ -21,7 +21,7 @@ public class Main {
             outputWriter.writeOnFail("Переменная окружения lab5 не установлена");
             return;
         }
-        outputWriter.write("Используется файл: " + filePath);
+        outputWriter.writeOnSuccess("Используется файл: " + filePath);
 
         BufferedInputStream bufferedInputStream = null;
         try {
@@ -63,22 +63,22 @@ public class Main {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         InputReader inputReader = new InputReader(commandExecutor, commandParser, bufferedReader);
 
-        commandExecutor.register(new HelpCommand(commandExecutor));
-        commandExecutor.register(new InfoCommand(collectionManager));
-        commandExecutor.register(new ShowCommand(collectionManager));
+        commandExecutor.register(new HelpCommand(commandExecutor, inputReader));
+        commandExecutor.register(new InfoCommand(collectionManager, inputReader));
+        commandExecutor.register(new ShowCommand(collectionManager, inputReader));
         commandExecutor.register(new InsertCommand(collectionManager, inputReader));
         commandExecutor.register(new UpdateCommand(collectionManager, inputReader));
-        commandExecutor.register(new RemoveByKeyCommand(collectionManager));
-        commandExecutor.register(new ClearCommand(collectionManager));
+        commandExecutor.register(new RemoveByKeyCommand(collectionManager, inputReader));
+        commandExecutor.register(new ClearCommand(collectionManager, inputReader));
         commandExecutor.register(new SaveCommand(collectionManager, inputReader));
-        commandExecutor.register(new ScriptCommand(commandExecutor, commandParser));
-        commandExecutor.register(new ExitCommand());
+        commandExecutor.register(new ScriptCommand(commandExecutor, inputReader));
+        commandExecutor.register(new ExitCommand(inputReader));
         commandExecutor.register(new RemoveLowerCommand(collectionManager, inputReader));
         commandExecutor.register(new ReplaceIfGreaterCommand(collectionManager, inputReader));
-        commandExecutor.register(new RemoveGreaterKeyCommand(collectionManager));
-        commandExecutor.register(new FilterStartsWithNameCommand(collectionManager));
-        commandExecutor.register(new PrintFieldAscendingEventCommand(collectionManager));
-        commandExecutor.register(new PrintFieldDescendingTypeCommand(collectionManager));
+        commandExecutor.register(new RemoveGreaterKeyCommand(collectionManager, inputReader));
+        commandExecutor.register(new FilterStartsWithNameCommand(collectionManager, inputReader));
+        commandExecutor.register(new PrintFieldAscendingEventCommand(collectionManager, inputReader));
+        commandExecutor.register(new PrintFieldDescendingTypeCommand(collectionManager, inputReader));
 
         try {
             inputReader.process();

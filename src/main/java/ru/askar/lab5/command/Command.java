@@ -1,5 +1,6 @@
 package ru.askar.lab5.command;
 
+import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.cli.output.OutputWriter;
 import ru.askar.lab5.exception.*;
 
@@ -8,11 +9,12 @@ import java.io.IOException;
 /**
  * Абстрактный класс для команд
  */
-public abstract class Command implements Cloneable {
+public abstract class Command {
     protected final int argsCount;
     protected final String name;
     protected OutputWriter outputWriter;
     protected boolean scriptMode = false;
+    protected InputReader inputReader;
 
     /**
      * Заполнение имени и количества требуемых аргументов
@@ -20,9 +22,14 @@ public abstract class Command implements Cloneable {
      * @param name
      * @param argsCount
      */
-    public Command(String name, int argsCount) {
+    public Command(String name, int argsCount, InputReader inputReader) {
         this.name = name;
         this.argsCount = argsCount;
+        this.inputReader = inputReader;
+    }
+
+    public void setInputReader(InputReader inputReader) {
+        this.inputReader = inputReader;
     }
 
     public void setScriptMode(boolean scriptMode) {
@@ -60,14 +67,5 @@ public abstract class Command implements Cloneable {
      */
     public void setOutputWriter(OutputWriter newOutputWriter) {
         outputWriter = newOutputWriter;
-    }
-
-    @Override
-    public Command clone() {
-        try {
-            return (Command) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
     }
 }

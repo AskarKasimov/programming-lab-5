@@ -14,7 +14,7 @@ public class SaveCommand extends Command {
     private final InputReader inputReader;
 
     public SaveCommand(CollectionManager collectionManager, InputReader inputReader) {
-        super("save", 0);
+        super("save", 0, inputReader);
         this.collectionManager = collectionManager;
         this.inputReader = inputReader;
     }

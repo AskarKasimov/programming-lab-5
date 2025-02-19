@@ -31,7 +31,7 @@ public enum EventType {
      * @param inputReader  - способ считывания входных данных
      * @return требуемый EventType
      */
-    public static EventType createEventType(OutputWriter outputWriter, InputReader inputReader) throws UserRejectedToFillFieldsException {
+    public static EventType createEventType(OutputWriter outputWriter, InputReader inputReader, boolean scriptMode) throws UserRejectedToFillFieldsException {
         outputWriter.write("Выберите тип события (" + getStringValues() + "): ");
         EventType eventType;
         try {
@@ -41,13 +41,16 @@ public enum EventType {
             }
             eventType = valueOf(value);
         } catch (IllegalArgumentException e) {
+            if (scriptMode) {
+                throw new UserRejectedToFillFieldsException();
+            }
             outputWriter.writeOnFail("Такого типа нет");
             outputWriter.writeOnWarning("Хотите попробовать еще раз? (y/n): ");
             String answer = inputReader.getInputString();
             if (answer != null && !answer.equals("y")) {
                 throw new UserRejectedToFillFieldsException();
             }
-            return createEventType(outputWriter, inputReader);
+            return createEventType(outputWriter, inputReader, scriptMode);
         }
         return eventType;
     }

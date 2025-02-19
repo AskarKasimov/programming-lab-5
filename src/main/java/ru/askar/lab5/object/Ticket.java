@@ -48,19 +48,19 @@ public class Ticket implements Comparable<Ticket> {
      * @param price        - цена
      * @return - созданный Ticket
      */
-    public static Ticket createTicket(OutputWriter outputWriter, InputReader inputReader, Long ticketId, String name, long price, Integer eventId) throws InvalidInputFieldException, UserRejectedToFillFieldsException {
+    public static Ticket createTicket(OutputWriter outputWriter, InputReader inputReader, Long ticketId, String name, long price, Integer eventId, boolean scriptMode) throws InvalidInputFieldException, UserRejectedToFillFieldsException {
         Ticket ticket = new Ticket(ticketId, name, price);
-        ticket.setCoordinates(Coordinates.createCoordinates(outputWriter, inputReader));
-        ticket.setType(TicketType.createTicketType(outputWriter, inputReader));
-        ticket.requestEvent(outputWriter, inputReader, eventId);
+        ticket.setCoordinates(Coordinates.createCoordinates(outputWriter, inputReader, scriptMode));
+        ticket.setType(TicketType.createTicketType(outputWriter, inputReader, scriptMode));
+        ticket.requestEvent(outputWriter, inputReader, eventId, scriptMode);
         return ticket;
     }
 
-    private void requestEvent(OutputWriter outputWriter, InputReader inputReader, Integer eventId) throws InvalidInputFieldException, UserRejectedToFillFieldsException {
+    private void requestEvent(OutputWriter outputWriter, InputReader inputReader, Integer eventId, boolean scriptMode) throws InvalidInputFieldException, UserRejectedToFillFieldsException {
         outputWriter.writeOnWarning("Хотите ввести событие? (y/n): ");
         String answer = inputReader.getInputString();
         if (answer != null && answer.equals("y")) {
-            this.setEvent(Event.createEvent(outputWriter, inputReader, eventId));
+            this.setEvent(Event.createEvent(outputWriter, inputReader, eventId, scriptMode));
         }
     }
 

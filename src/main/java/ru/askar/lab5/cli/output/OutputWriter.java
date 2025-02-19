@@ -11,6 +11,8 @@ public interface OutputWriter {
 
     void write(String message);
 
+    void writeln(String message);
+
     /**
      * Печать успешного результата
      *

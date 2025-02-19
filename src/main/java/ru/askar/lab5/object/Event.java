@@ -36,16 +36,16 @@ public class Event implements Comparable<Event> {
      * @param outputWriter - способ печати ответа
      * @param inputReader  - способ считывания входных данных
      */
-    public static Event createEvent(OutputWriter outputWriter, InputReader inputReader, Integer id) throws UserRejectedToFillFieldsException, InvalidInputFieldException {
+    public static Event createEvent(OutputWriter outputWriter, InputReader inputReader, Integer id, boolean scriptMode) throws UserRejectedToFillFieldsException, InvalidInputFieldException {
         Event event = new Event(id);
         outputWriter.writeOnSuccess("Ввод события");
-        event.requestName(outputWriter, inputReader);
-        event.requestDescription(outputWriter, inputReader);
-        event.requestEventType(outputWriter, inputReader);
+        event.requestName(outputWriter, inputReader, scriptMode);
+        event.requestDescription(outputWriter, inputReader, scriptMode);
+        event.requestEventType(outputWriter, inputReader, scriptMode);
         return event;
     }
 
-    private void requestName(OutputWriter outputWriter, InputReader inputReader) throws UserRejectedToFillFieldsException {
+    private void requestName(OutputWriter outputWriter, InputReader inputReader, boolean scriptMode) throws UserRejectedToFillFieldsException {
         String name;
         do {
             outputWriter.write("Введите название события: ");
@@ -54,6 +54,9 @@ public class Event implements Comparable<Event> {
                 this.setName(name);
             } catch (InvalidInputFieldException e) {
                 name = null;
+                if (scriptMode) {
+                    throw new UserRejectedToFillFieldsException();
+                }
                 outputWriter.writeOnFail(e.getMessage());
                 outputWriter.writeOnWarning("Хотите попробовать еще раз? (y/n): ");
                 String answer = inputReader.getInputString();
@@ -64,7 +67,7 @@ public class Event implements Comparable<Event> {
         } while (name == null);
     }
 
-    private void requestDescription(OutputWriter outputWriter, InputReader inputReader) throws UserRejectedToFillFieldsException {
+    private void requestDescription(OutputWriter outputWriter, InputReader inputReader, boolean scriptMode) throws UserRejectedToFillFieldsException {
         String description;
         do {
             outputWriter.write("Введите описание события: ");
@@ -73,6 +76,9 @@ public class Event implements Comparable<Event> {
                 this.setDescription(description);
             } catch (InvalidInputFieldException e) {
                 description = null;
+                if (scriptMode) {
+                    throw new UserRejectedToFillFieldsException();
+                }
                 outputWriter.writeOnFail(e.getMessage());
                 outputWriter.writeOnWarning("Хотите попробовать еще раз? (y/n): ");
                 String answer = inputReader.getInputString();
@@ -83,11 +89,11 @@ public class Event implements Comparable<Event> {
         } while (description == null);
     }
 
-    private void requestEventType(OutputWriter outputWriter, InputReader inputReader) throws UserRejectedToFillFieldsException {
+    private void requestEventType(OutputWriter outputWriter, InputReader inputReader, boolean scriptMode) throws UserRejectedToFillFieldsException {
         outputWriter.writeOnWarning("Хотите ввести тип события? (y/n): ");
         String answer = inputReader.getInputString();
         if (answer != null && answer.equals("y")) {
-            setEventType(EventType.createEventType(outputWriter, inputReader));
+            setEventType(EventType.createEventType(outputWriter, inputReader, scriptMode));
         }
     }
 

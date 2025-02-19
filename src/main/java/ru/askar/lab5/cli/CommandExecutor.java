@@ -30,10 +30,8 @@ public class CommandExecutor {
         this.scriptMode = scriptMode;
     }
 
-    public CommandExecutor copyWithAnotherOutput(OutputWriter outputWriter) {
-        CommandExecutor newCommandExecutor = new CommandExecutor(outputWriter, true);
-        commands.forEach((name, command) -> newCommandExecutor.register(command.clone()));
-        return newCommandExecutor;
+    public void setOutputWriterToCommands(OutputWriter outputWriter) {
+        commands.forEach((name, command) -> command.setOutputWriter(outputWriter));
     }
 
     public OutputWriter getOutputWriter() {

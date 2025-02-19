@@ -3,6 +3,7 @@ package ru.askar.lab5.command;
 import com.github.freva.asciitable.AsciiTable;
 import com.github.freva.asciitable.Column;
 import com.github.freva.asciitable.HorizontalAlign;
+import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.collection.CollectionManager;
 import ru.askar.lab5.object.Ticket;
 
@@ -12,8 +13,8 @@ import java.util.List;
 public class FilterStartsWithNameCommand extends Command {
     private final CollectionManager collectionManager;
 
-    public FilterStartsWithNameCommand(CollectionManager collectionManager) {
-        super("filter_starts_with_name", 1);
+    public FilterStartsWithNameCommand(CollectionManager collectionManager, InputReader inputReader) {
+        super("filter_starts_with_name", 1, inputReader);
         this.collectionManager = collectionManager;
     }
 
@@ -22,7 +23,7 @@ public class FilterStartsWithNameCommand extends Command {
         List<Ticket> ticketList = collectionManager.getCollection().values().stream()
                 .filter(t -> t.getName().startsWith(args[0]))
                 .toList();
-        outputWriter.write(AsciiTable.getTable(ticketList, Arrays.asList(
+        outputWriter.writeln(AsciiTable.getTable(ticketList, Arrays.asList(
                 new Column().header("ID").maxWidth(10).headerAlign(HorizontalAlign.CENTER).with(ticket -> String.valueOf(ticket.getId())),
                 new Column().header("Название").maxWidth(10).headerAlign(HorizontalAlign.CENTER).with(Ticket::getName),
                 new Column().header("Координаты").maxWidth(31).headerAlign(HorizontalAlign.CENTER).with(ticket -> "(" + ticket.getCoordinates().getX() + ", " + ticket.getCoordinates().getY() + ")"),

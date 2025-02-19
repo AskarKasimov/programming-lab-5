@@ -11,7 +11,7 @@ public class UpdateCommand extends Command {
     private final InputReader inputReader;
 
     public UpdateCommand(CollectionManager collectionManager, InputReader inputReader) {
-        super("update", 3);
+        super("update", 3, inputReader);
         this.inputReader = inputReader;
         this.collectionManager = collectionManager;
     }
@@ -33,7 +33,7 @@ public class UpdateCommand extends Command {
         }
         outputWriter.writeOnSuccess("Хотите изменить данные, помимо названия и цены? (y/n): ");
         if (inputReader.getInputString().equals("y")) {
-            Ticket newTicket = Ticket.createTicket(outputWriter, inputReader, id, name, price, collectionManager.generateNextEventId());
+            Ticket newTicket = Ticket.createTicket(outputWriter, inputReader, id, name, price, collectionManager.generateNextEventId(), scriptMode);
             collectionManager.getCollection().put(id, newTicket);
         } else {
             oldTicket.setName(name);

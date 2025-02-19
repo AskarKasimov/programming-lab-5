@@ -11,7 +11,7 @@ public class InsertCommand extends Command {
     private final InputReader inputReader;
 
     public InsertCommand(CollectionManager collectionManager, InputReader inputReader) {
-        super("insert", 3);
+        super("insert", 3, inputReader);
         this.inputReader = inputReader;
         this.collectionManager = collectionManager;
     }
@@ -37,7 +37,7 @@ public class InsertCommand extends Command {
             }
         }
 
-        Ticket ticket = Ticket.createTicket(outputWriter, inputReader, id, name, price, collectionManager.generateNextEventId());
+        Ticket ticket = Ticket.createTicket(outputWriter, inputReader, id, name, price, collectionManager.generateNextEventId(), scriptMode);
         collectionManager.getCollection().put(ticket.getId(), ticket);
         outputWriter.writeOnSuccess("Элемент добавлен в коллекцию");
     }

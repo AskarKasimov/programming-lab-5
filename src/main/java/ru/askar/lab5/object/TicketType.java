@@ -30,7 +30,7 @@ public enum TicketType {
      * @param inputReader  - способ считывания входных данных
      * @return требуемый TicketType
      */
-    public static TicketType createTicketType(OutputWriter outputWriter, InputReader inputReader) throws UserRejectedToFillFieldsException {
+    public static TicketType createTicketType(OutputWriter outputWriter, InputReader inputReader, boolean scriptMode) throws UserRejectedToFillFieldsException {
         outputWriter.write("Выберите тип билета (" + getStringValues() + "): ");
         TicketType ticketType;
         try {
@@ -40,13 +40,16 @@ public enum TicketType {
             }
             ticketType = valueOf(value);
         } catch (IllegalArgumentException e) {
+            if (scriptMode) {
+                throw new UserRejectedToFillFieldsException();
+            }
             outputWriter.writeOnFail("Такого типа нет");
             outputWriter.writeOnWarning("Хотите попробовать еще раз? (y/n): ");
             String answer = inputReader.getInputString();
             if (answer != null && !answer.equals("y")) {
                 throw new UserRejectedToFillFieldsException();
             }
-            return createTicketType(outputWriter, inputReader);
+            return createTicketType(outputWriter, inputReader, scriptMode);
         }
         return ticketType;
     }

@@ -11,7 +11,7 @@ public class ReplaceIfGreaterCommand extends Command {
     private final InputReader inputReader;
 
     public ReplaceIfGreaterCommand(CollectionManager collectionManager, InputReader inputReader) {
-        super("replace_if_greater", 3);
+        super("replace_if_greater", 3, inputReader);
         this.inputReader = inputReader;
         this.collectionManager = collectionManager;
     }
@@ -25,7 +25,7 @@ public class ReplaceIfGreaterCommand extends Command {
             return;
         }
 
-        Ticket newTicket = Ticket.createTicket(outputWriter, inputReader, collectionManager.generateNextTicketId(), args[1], Long.parseLong(args[2]), collectionManager.generateNextEventId());
+        Ticket newTicket = Ticket.createTicket(outputWriter, inputReader, collectionManager.generateNextTicketId(), args[1], Long.parseLong(args[2]), collectionManager.generateNextEventId(), scriptMode);
 
         if (oldTicket.compareTo(newTicket) < 0) {
             collectionManager.getCollection().put(id, newTicket);

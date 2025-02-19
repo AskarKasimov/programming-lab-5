@@ -7,6 +7,11 @@ public class VoidOutput implements OutputWriter {
     }
 
     @Override
+    public void writeln(String message) {
+
+    }
+
+    @Override
     public void writeOnSuccess(String message) {
 
     }

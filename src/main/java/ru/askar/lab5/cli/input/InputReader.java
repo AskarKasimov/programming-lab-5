@@ -15,7 +15,8 @@ public class InputReader {
      */
     private final CommandExecutor commandExecutor;
     private final CommandParser commandParser;
-    private final BufferedReader bufferedReader;
+    private boolean scriptMode = false;
+    private BufferedReader bufferedReader;
 
     /**
      * @param commandExecutor - класс для выполнения команд.
@@ -25,6 +26,22 @@ public class InputReader {
     public InputReader(CommandExecutor commandExecutor, CommandParser commandParser, BufferedReader bufferedReader) {
         this.commandExecutor = commandExecutor;
         this.commandParser = commandParser;
+        this.bufferedReader = bufferedReader;
+    }
+
+    public boolean isScriptMode() {
+        return scriptMode;
+    }
+
+    public void setScriptMode(boolean scriptMode) {
+        this.scriptMode = scriptMode;
+    }
+
+    public BufferedReader getBufferedReader() {
+        return bufferedReader;
+    }
+
+    public void setBufferedReader(BufferedReader bufferedReader) {
         this.bufferedReader = bufferedReader;
     }
 
@@ -70,11 +87,7 @@ public class InputReader {
     public BigDecimal getInputBigDecimal() {
         // Сделано по большей части для Y и ограничения на 654.00000000000001 и прочую дичь
         try {
-            BigDecimal value = new BigDecimal(bufferedReader.readLine());
-            if (Float.isInfinite(value.floatValue())) {
-                throw new IllegalArgumentException("Число слишком большое");
-            }
-            return value;
+            return new BigDecimal(bufferedReader.readLine());
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Требуется число с точкой");
         } catch (IOException e) {
@@ -87,8 +100,10 @@ public class InputReader {
      */
     public void process() throws IOException {
         String line;
-        System.out.print("> ");
+        if (!scriptMode)
+            commandExecutor.getOutputWriter().write("> ");
         while ((line = bufferedReader.readLine()) != null) {
+//            System.out.println(line);
             try {
                 ParsedCommand parsedCommand;
                 try {
@@ -110,7 +125,8 @@ public class InputReader {
             } catch (ExitCLIException e) {
                 break;
             } finally {
-                System.out.print("> ");
+                if (!scriptMode)
+                    commandExecutor.getOutputWriter().write("> ");
             }
         }
     }

@@ -1,12 +1,13 @@
 package ru.askar.lab5.command;
 
+import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.collection.CollectionManager;
 
 public class InfoCommand extends Command {
     private final CollectionManager collectionManager;
 
-    public InfoCommand(CollectionManager collectionManager) {
-        super("info", 0);
+    public InfoCommand(CollectionManager collectionManager, InputReader inputReader) {
+        super("info", 0, inputReader);
         this.collectionManager = collectionManager;
     }
 

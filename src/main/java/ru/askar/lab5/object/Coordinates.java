@@ -31,15 +31,15 @@ public class Coordinates {
      * @param inputReader  - способ считывания входных данных
      * @return - созданный Coordinates
      */
-    public static Coordinates createCoordinates(OutputWriter outputWriter, InputReader inputReader) throws UserRejectedToFillFieldsException {
+    public static Coordinates createCoordinates(OutputWriter outputWriter, InputReader inputReader, boolean scriptMode) throws UserRejectedToFillFieldsException {
         Coordinates coordinates = new Coordinates();
         outputWriter.write("Ввод координат");
-        coordinates.requestX(outputWriter, inputReader);
-        coordinates.requestY(outputWriter, inputReader);
+        coordinates.requestX(outputWriter, inputReader, scriptMode);
+        coordinates.requestY(outputWriter, inputReader, scriptMode);
         return coordinates;
     }
 
-    private void requestX(OutputWriter outputWriter, InputReader inputReader) throws UserRejectedToFillFieldsException {
+    private void requestX(OutputWriter outputWriter, InputReader inputReader, boolean scriptMode) throws UserRejectedToFillFieldsException {
         Float x;
         do {
             outputWriter.write("Введите координату x: ");
@@ -48,6 +48,9 @@ public class Coordinates {
                 this.setX(x);
             } catch (InvalidInputFieldException | IllegalArgumentException e) {
                 x = null;
+                if (scriptMode) {
+                    throw new UserRejectedToFillFieldsException();
+                }
                 outputWriter.writeOnFail(e.getMessage());
                 outputWriter.writeOnWarning("Хотите попробовать еще раз? (y/n): ");
                 String answer = inputReader.getInputString();
@@ -58,7 +61,7 @@ public class Coordinates {
         } while (x == null);
     }
 
-    private void requestY(OutputWriter outputWriter, InputReader inputReader) throws UserRejectedToFillFieldsException {
+    private void requestY(OutputWriter outputWriter, InputReader inputReader, boolean scriptMode) throws UserRejectedToFillFieldsException {
         BigDecimal y;
         do {
             outputWriter.write("Введите координату y: ");
@@ -67,6 +70,9 @@ public class Coordinates {
                 this.setY(y);
             } catch (InvalidInputFieldException | IllegalArgumentException e) {
                 y = null;
+                if (scriptMode) {
+                    throw new UserRejectedToFillFieldsException();
+                }
                 outputWriter.writeOnFail(e.getMessage());
                 outputWriter.writeOnWarning("Хотите попробовать еще раз? (y/n): ");
                 String answer = inputReader.getInputString();
