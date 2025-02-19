@@ -13,8 +13,13 @@ public class RemoveGreaterKeyCommand extends Command {
     @Override
     public void execute(String[] args) {
         Long key = Long.parseLong(args[0]);
+        int lastSize = collectionManager.getCollection().size();
         collectionManager.getCollection().entrySet().removeIf(e -> e.getKey() > key);
-        outputWriter.writeOnSuccess("Элементы удалены");
+        if (lastSize == collectionManager.getCollection().size()) {
+            outputWriter.writeOnFail("Элементы не найдены");
+        } else {
+            outputWriter.writeOnSuccess("Элементы удалены");
+        }
     }
 
     @Override

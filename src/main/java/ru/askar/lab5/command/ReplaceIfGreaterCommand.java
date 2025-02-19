@@ -25,7 +25,7 @@ public class ReplaceIfGreaterCommand extends Command {
             return;
         }
 
-        Ticket newTicket = Ticket.createTicket(outputWriter, inputReader, 1L, args[0], Long.parseLong(args[1]), collectionManager.generateNextEventId());
+        Ticket newTicket = Ticket.createTicket(outputWriter, inputReader, collectionManager.generateNextTicketId(), args[1], Long.parseLong(args[2]), collectionManager.generateNextEventId());
 
         if (oldTicket.compareTo(newTicket) < 0) {
             collectionManager.getCollection().put(id, newTicket);

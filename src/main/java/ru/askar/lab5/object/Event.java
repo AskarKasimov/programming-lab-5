@@ -104,8 +104,17 @@ public class Event implements Comparable<Event> {
     }
 
     @Override
-    public int compareTo(Event o) {
-        return Integer.compare(this.id, o.id);
+    public int compareTo(Event other) {
+        // Сначала сравниваем по типу события
+        if (this.eventType != null && other.eventType != null) {
+            int eventTypeComparison = this.eventType.compareTo(other.eventType);
+            if (eventTypeComparison != 0) {
+                return eventTypeComparison;
+            }
+        }
+
+        // Если типы равны или null, сравниваем по имени
+        return this.name.compareTo(other.name);
     }
 
     @Override

@@ -1,9 +1,11 @@
 package ru.askar.lab5.collection;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
+import ru.askar.lab5.exception.InvalidCollectionFileException;
+import ru.askar.lab5.exception.InvalidInputFieldException;
 import ru.askar.lab5.object.Event;
 import ru.askar.lab5.object.Ticket;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -19,10 +21,39 @@ public class CollectionManager {
     private final TreeMap<Long, Ticket> collection;
     private final DataReader starterDataReader;
 
-    public CollectionManager(DataReader dataReader, BufferedInputStream bufferedInputStream) throws IOException {
-        dateOfInitialization = java.time.LocalDateTime.now();
-        this.starterDataReader = dataReader;
-        this.starterDataReader.readData(bufferedInputStream);
+    public CollectionManager(DataReader dataReader) throws InvalidInputFieldException, IOException {
+        this.dateOfInitialization = LocalDateTime.now();
+        if (dataReader == null) {
+            this.starterDataReader = new DataReader() {
+                @Override
+                public void readData() throws IOException {
+                }
+
+                @Override
+                public TreeMap<Long, Ticket> getData() {
+                    return new TreeMap<>();
+                }
+
+                @Override
+                public String getSource() {
+                    return null;
+                }
+            };
+        } else this.starterDataReader = dataReader;
+        try {
+            this.starterDataReader.readData();
+        } catch (JsonMappingException e) {
+            Throwable cause = e.getCause();
+            if (cause != null) {
+                throw new InvalidInputFieldException("Критическая ошибка поля структуры: " + cause.getMessage());
+            } else {
+                throw new IOException("Неизвестная ошибка считывания данных из файла: " + e.getOriginalMessage());
+            }
+        } catch (InvalidCollectionFileException e) {
+            throw new InvalidCollectionFileException("Критическая ошибка читаемого файла: " + e.getMessage());
+        } catch (IOException e) {
+            throw new IOException("Ошибка при чтении файла: " + e.getMessage());
+        }
         this.collection = this.starterDataReader.getData();
     }
 

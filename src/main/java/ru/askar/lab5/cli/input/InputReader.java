@@ -38,7 +38,7 @@ public class InputReader {
     public String getInputString() {
         try {
             String line = bufferedReader.readLine();
-            if (line.isEmpty()) {
+            if (line != null && line.isEmpty()) {
                 return null;
             }
             return line;
@@ -57,6 +57,21 @@ public class InputReader {
         try {
             float value = new BigDecimal(bufferedReader.readLine()).floatValue();
             if (Float.isInfinite(value)) {
+                throw new IllegalArgumentException("Число слишком большое");
+            }
+            return value;
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Требуется число с точкой");
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Ошибка ввода");
+        }
+    }
+
+    public BigDecimal getInputBigDecimal() {
+        // Сделано по большей части для Y и ограничения на 654.00000000000001 и прочую дичь
+        try {
+            BigDecimal value = new BigDecimal(bufferedReader.readLine());
+            if (Float.isInfinite(value.floatValue())) {
                 throw new IllegalArgumentException("Число слишком большое");
             }
             return value;

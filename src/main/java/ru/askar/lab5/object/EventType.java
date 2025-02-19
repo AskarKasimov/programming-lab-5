@@ -4,6 +4,9 @@ import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.cli.output.OutputWriter;
 import ru.askar.lab5.exception.UserRejectedToFillFieldsException;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public enum EventType {
     E_SPORTS,
     FOOTBALL,
@@ -15,14 +18,9 @@ public enum EventType {
      * Получить доступные типы в строковом представлении
      */
     public static String getStringValues() {
-        StringBuilder result = new StringBuilder();
-        for (EventType type : values()) {
-            if (!result.isEmpty() && type.ordinal() < values().length) {
-                result.append(",");
-            }
-            result.append(type.name());
-        }
-        return result.toString();
+        return Arrays.stream(values())
+                .map(Enum::name)
+                .collect(Collectors.joining(","));
     }
 
     /**

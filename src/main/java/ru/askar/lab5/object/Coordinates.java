@@ -1,7 +1,6 @@
 package ru.askar.lab5.object;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.cli.output.OutputWriter;
@@ -60,11 +59,11 @@ public class Coordinates {
     }
 
     private void requestY(OutputWriter outputWriter, InputReader inputReader) throws UserRejectedToFillFieldsException {
-        Float y;
+        BigDecimal y;
         do {
             outputWriter.write("Введите координату y: ");
             try {
-                y = inputReader.getInputFloat();
+                y = inputReader.getInputBigDecimal();
                 this.setY(y);
             } catch (InvalidInputFieldException | IllegalArgumentException e) {
                 y = null;
@@ -113,20 +112,6 @@ public class Coordinates {
 
     public Float getY() {
         return y;
-    }
-
-    @JsonIgnore
-    public void setY(Float y) throws InvalidInputFieldException {
-        if (y == null) {
-            throw new InvalidInputFieldException("Координата Y не может быть null");
-        }
-        if (y.isInfinite()) {
-            throw new InvalidInputFieldException("Координата Y слишком большая");
-        }
-        if (y > 654) {
-            throw new InvalidInputFieldException("Координата Y не может быть больше 654");
-        }
-        this.y = y;
     }
 
     public void setY(BigDecimal y) throws InvalidInputFieldException {

@@ -8,10 +8,11 @@ import java.io.IOException;
 /**
  * Абстрактный класс для команд
  */
-public abstract class Command {
+public abstract class Command implements Cloneable {
     protected final int argsCount;
     protected final String name;
     protected OutputWriter outputWriter;
+    protected boolean scriptMode = false;
 
     /**
      * Заполнение имени и количества требуемых аргументов
@@ -22,6 +23,10 @@ public abstract class Command {
     public Command(String name, int argsCount) {
         this.name = name;
         this.argsCount = argsCount;
+    }
+
+    public void setScriptMode(boolean scriptMode) {
+        this.scriptMode = scriptMode;
     }
 
     /**
@@ -55,5 +60,14 @@ public abstract class Command {
      */
     public void setOutputWriter(OutputWriter newOutputWriter) {
         outputWriter = newOutputWriter;
+    }
+
+    @Override
+    public Command clone() {
+        try {
+            return (Command) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

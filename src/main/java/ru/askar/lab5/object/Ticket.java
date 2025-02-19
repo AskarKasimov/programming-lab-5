@@ -80,9 +80,15 @@ public class Ticket implements Comparable<Ticket> {
      * Сравнение, реализованное через разницу id'шников
      */
     @Override
-    public int compareTo(Ticket o) {
-        return Long.compare(this.id, o.id);
-        //TODO: поменять
+    public int compareTo(Ticket other) {
+        // Сначала сравниваем по типу билета
+        int typeComparison = this.type.compareTo(other.type);
+        if (typeComparison != 0) {
+            return typeComparison;
+        }
+
+        // Если типы равны, сравниваем по цене
+        return Long.compare(this.price, other.price);
     }
 
     @Override

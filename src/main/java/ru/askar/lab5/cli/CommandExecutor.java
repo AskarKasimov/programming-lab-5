@@ -13,6 +13,7 @@ import java.util.Map;
 public class CommandExecutor {
     private final OutputWriter outputWriter;
     private final LinkedHashMap<String, Command> commands = new LinkedHashMap<>();
+    private boolean scriptMode;
 
     /**
      * Создание реестра команд с регистрацией способа вывода.
@@ -21,6 +22,18 @@ public class CommandExecutor {
      */
     public CommandExecutor(OutputWriter outputWriter) {
         this.outputWriter = outputWriter;
+        this.scriptMode = false;
+    }
+
+    public CommandExecutor(OutputWriter outputWriter, boolean scriptMode) {
+        this(outputWriter);
+        this.scriptMode = scriptMode;
+    }
+
+    public CommandExecutor copyWithAnotherOutput(OutputWriter outputWriter) {
+        CommandExecutor newCommandExecutor = new CommandExecutor(outputWriter, true);
+        commands.forEach((name, command) -> newCommandExecutor.register(command.clone()));
+        return newCommandExecutor;
     }
 
     public OutputWriter getOutputWriter() {
@@ -34,6 +47,7 @@ public class CommandExecutor {
      */
     public void register(Command command) {
         command.setOutputWriter(this.outputWriter);
+        command.setScriptMode(this.scriptMode);
         commands.put(command.getName(), command);
     }
 

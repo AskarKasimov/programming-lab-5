@@ -1,9 +1,14 @@
 package ru.askar.lab5.command;
 
+import com.github.freva.asciitable.AsciiTable;
+import com.github.freva.asciitable.Column;
+import com.github.freva.asciitable.HorizontalAlign;
 import ru.askar.lab5.collection.CollectionManager;
 import ru.askar.lab5.object.Event;
 import ru.askar.lab5.object.Ticket;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class PrintFieldAscendingEventCommand extends Command {
@@ -16,11 +21,16 @@ public class PrintFieldAscendingEventCommand extends Command {
 
     @Override
     public void execute(String[] args) {
-        collectionManager.getCollection().values().stream()
+        List<Event> eventList = collectionManager.getCollection().values().stream()
                 .map(Ticket::getEvent)
                 .filter(Objects::nonNull)
-                .sorted(Event::compareTo)
-                .forEach(e -> outputWriter.writeOnSuccess(e.toString()));
+                .sorted().toList();
+        outputWriter.write(AsciiTable.getTable(eventList, Arrays.asList(
+                new Column().header("ID события").maxWidth(10).headerAlign(HorizontalAlign.CENTER).with(event -> String.valueOf(event.getId())),
+                new Column().header("Название события").maxWidth(10).headerAlign(HorizontalAlign.CENTER).with(Event::getName),
+                new Column().header("Описание события").maxWidth(20).headerAlign(HorizontalAlign.CENTER).with(Event::getDescription),
+                new Column().header("Тип события").maxWidth(10).headerAlign(HorizontalAlign.CENTER).with(event -> event.getEventType() != null ? event.getEventType().name() : "-")
+        )));
     }
 
     @Override

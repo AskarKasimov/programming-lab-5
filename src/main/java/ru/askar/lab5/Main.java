@@ -1,21 +1,20 @@
 package ru.askar.lab5;
 
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import ru.askar.lab5.cli.CommandExecutor;
 import ru.askar.lab5.cli.CommandParser;
 import ru.askar.lab5.cli.input.InputReader;
 import ru.askar.lab5.cli.output.OutputWriter;
 import ru.askar.lab5.cli.output.Stdout;
 import ru.askar.lab5.collection.CollectionManager;
+import ru.askar.lab5.collection.DataReader;
 import ru.askar.lab5.collection.JsonReader;
 import ru.askar.lab5.command.*;
-import ru.askar.lab5.exception.InvalidCollectionFileException;
 
 import java.io.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         OutputWriter outputWriter = new Stdout();
         String filePath = System.getenv("lab5");
         if (filePath == null || filePath.isEmpty()) {
@@ -24,27 +23,40 @@ public class Main {
         }
         outputWriter.write("Используется файл: " + filePath);
 
-        CollectionManager collectionManager = null;
-        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(filePath))) {
-            collectionManager = new CollectionManager(new JsonReader(filePath), bufferedInputStream);
-            outputWriter.writeOnSuccess("Файл успешно захаван:)))");
-        } catch (JsonMappingException e) {
-            Throwable cause = e.getCause();
-            if (cause != null) {
-                outputWriter.writeOnFail("Критическая ошибка поля структуры: " + cause.getMessage());
-            } else {
-                outputWriter.writeOnFail("Неизвестная ошибка считывания данных из файла: " + e.getOriginalMessage());
-            }
-            outputWriter.writeOnWarning("Внимание: используется пустая коллекция");
-        } catch (InvalidCollectionFileException e) {
-            outputWriter.writeOnFail("Критическая ошибка читаемого файла: " + e.getMessage());
-            outputWriter.writeOnWarning("Внимание: используется пустая коллекция");
-        } catch (IOException e) {
-            outputWriter.write("Ошибка при чтении файла: " + e.getMessage());
-            outputWriter.writeOnWarning("Внимание: используется пустая коллекция");
+        BufferedInputStream bufferedInputStream = null;
+        try {
+            bufferedInputStream = new BufferedInputStream(new FileInputStream(filePath));
+        } catch (FileNotFoundException | SecurityException e) {
+            outputWriter.writeOnFail("Файл не удаётся прочитать: " + e.getMessage());
         }
 
+        DataReader dataReader = new JsonReader(filePath, bufferedInputStream);
+        if (bufferedInputStream == null) {
+            dataReader = null;
+        }
 
+        CollectionManager collectionManager = null;
+        try {
+            collectionManager = new CollectionManager(dataReader);
+        } catch (Exception e) {
+            outputWriter.writeOnFail(e.getMessage());
+        } finally {
+            try {
+                if (bufferedInputStream != null) bufferedInputStream.close();
+            } catch (IOException e) {
+                outputWriter.writeOnFail("Ошибка при закрытии файла: " + e.getMessage());
+            }
+        }
+        if (collectionManager == null) {
+            try {
+                collectionManager = new CollectionManager(null);
+            } catch (Exception e) {
+                // ignored
+            }
+        }
+        if (collectionManager.getCollection().isEmpty()) {
+            outputWriter.writeOnWarning("Коллекция пуста");
+        }
         CommandExecutor commandExecutor = new CommandExecutor(outputWriter);
         CommandParser commandParser = new CommandParser();
 
@@ -58,7 +70,7 @@ public class Main {
         commandExecutor.register(new UpdateCommand(collectionManager, inputReader));
         commandExecutor.register(new RemoveByKeyCommand(collectionManager));
         commandExecutor.register(new ClearCommand(collectionManager));
-        commandExecutor.register(new SaveCommand(collectionManager));
+        commandExecutor.register(new SaveCommand(collectionManager, inputReader));
         commandExecutor.register(new ScriptCommand(commandExecutor, commandParser));
         commandExecutor.register(new ExitCommand());
         commandExecutor.register(new RemoveLowerCommand(collectionManager, inputReader));
@@ -68,6 +80,10 @@ public class Main {
         commandExecutor.register(new PrintFieldAscendingEventCommand(collectionManager));
         commandExecutor.register(new PrintFieldDescendingTypeCommand(collectionManager));
 
-        inputReader.process();
+        try {
+            inputReader.process();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

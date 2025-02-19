@@ -15,13 +15,15 @@ import java.util.TreeMap;
 public class JsonReader implements DataReader {
     private final TreeMap<Long, Ticket> collection = new TreeMap<>();
     private final String source;
+    private final BufferedInputStream inputStream;
 
-    public JsonReader(String source) {
+    public JsonReader(String source, BufferedInputStream inputStream) {
         this.source = source;
+        this.inputStream = inputStream;
     }
 
     @Override
-    public void readData(BufferedInputStream inputStream) throws IOException {
+    public void readData() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         ArrayList<Ticket> tempMap = objectMapper.readValue(inputStream, new TypeReference<>() {

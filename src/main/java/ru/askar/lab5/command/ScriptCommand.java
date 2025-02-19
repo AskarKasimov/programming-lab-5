@@ -3,6 +3,7 @@ package ru.askar.lab5.command;
 import ru.askar.lab5.cli.CommandExecutor;
 import ru.askar.lab5.cli.CommandParser;
 import ru.askar.lab5.cli.input.InputReader;
+import ru.askar.lab5.cli.output.VoidOutput;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -24,7 +25,7 @@ public class ScriptCommand extends Command {
         FileInputStream fileInputStream = new FileInputStream(args[0]);
         InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        InputReader inputReader = new InputReader(commandExecutor, commandParser, bufferedReader);
+        InputReader inputReader = new InputReader(commandExecutor.copyWithAnotherOutput(new VoidOutput()), commandParser, bufferedReader);
         inputReader.process();
     }
 
