@@ -33,7 +33,7 @@ public class Coordinates {
      */
     public static Coordinates createCoordinates(OutputWriter outputWriter, InputReader inputReader, boolean scriptMode) throws UserRejectedToFillFieldsException {
         Coordinates coordinates = new Coordinates();
-        outputWriter.write("Ввод координат");
+        outputWriter.write("Ввод координат: ");
         coordinates.requestX(outputWriter, inputReader, scriptMode);
         coordinates.requestY(outputWriter, inputReader, scriptMode);
         return coordinates;
@@ -42,7 +42,7 @@ public class Coordinates {
     private void requestX(OutputWriter outputWriter, InputReader inputReader, boolean scriptMode) throws UserRejectedToFillFieldsException {
         Float x;
         do {
-            outputWriter.write("Введите координату x: ");
+            outputWriter.write("Введите x: ");
             try {
                 x = inputReader.getInputFloat();
                 this.setX(x);
@@ -54,7 +54,7 @@ public class Coordinates {
                 outputWriter.writeOnFail(e.getMessage());
                 outputWriter.writeOnWarning("Хотите попробовать еще раз? (y/n): ");
                 String answer = inputReader.getInputString();
-                if (answer != null && !answer.equals("y")) {
+                if (answer != null && !answer.equalsIgnoreCase("y")) {
                     throw new UserRejectedToFillFieldsException();
                 }
             }
@@ -64,7 +64,7 @@ public class Coordinates {
     private void requestY(OutputWriter outputWriter, InputReader inputReader, boolean scriptMode) throws UserRejectedToFillFieldsException {
         BigDecimal y;
         do {
-            outputWriter.write("Введите координату y: ");
+            outputWriter.write("Введите y: ");
             try {
                 y = inputReader.getInputBigDecimal();
                 this.setY(y);
@@ -76,7 +76,7 @@ public class Coordinates {
                 outputWriter.writeOnFail(e.getMessage());
                 outputWriter.writeOnWarning("Хотите попробовать еще раз? (y/n): ");
                 String answer = inputReader.getInputString();
-                if (answer != null && !answer.equals("y")) {
+                if (answer != null && !answer.equalsIgnoreCase("y")) {
                     throw new UserRejectedToFillFieldsException();
                 }
             }

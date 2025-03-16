@@ -46,7 +46,7 @@ public enum TicketType {
             outputWriter.writeOnFail("Такого типа нет");
             outputWriter.writeOnWarning("Хотите попробовать еще раз? (y/n): ");
             String answer = inputReader.getInputString();
-            if (answer != null && !answer.equals("y")) {
+            if (answer != null && !answer.equalsIgnoreCase("y")) {
                 throw new UserRejectedToFillFieldsException();
             }
             return createTicketType(outputWriter, inputReader, scriptMode);

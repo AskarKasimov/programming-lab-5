@@ -60,7 +60,7 @@ public class Event implements Comparable<Event> {
                 outputWriter.writeOnFail(e.getMessage());
                 outputWriter.writeOnWarning("Хотите попробовать еще раз? (y/n): ");
                 String answer = inputReader.getInputString();
-                if (answer != null && !answer.equals("y")) {
+                if (answer != null && !answer.equalsIgnoreCase("y")) {
                     throw new UserRejectedToFillFieldsException();
                 }
             }
@@ -82,7 +82,7 @@ public class Event implements Comparable<Event> {
                 outputWriter.writeOnFail(e.getMessage());
                 outputWriter.writeOnWarning("Хотите попробовать еще раз? (y/n): ");
                 String answer = inputReader.getInputString();
-                if (answer != null && !answer.equals("y")) {
+                if (answer != null && !answer.equalsIgnoreCase("y")) {
                     throw new UserRejectedToFillFieldsException();
                 }
             }
@@ -92,7 +92,7 @@ public class Event implements Comparable<Event> {
     private void requestEventType(OutputWriter outputWriter, InputReader inputReader, boolean scriptMode) throws UserRejectedToFillFieldsException {
         outputWriter.writeOnWarning("Хотите ввести тип события? (y/n): ");
         String answer = inputReader.getInputString();
-        if (answer != null && answer.equals("y")) {
+        if (answer != null && answer.equalsIgnoreCase("y")) {
             setEventType(EventType.createEventType(outputWriter, inputReader, scriptMode));
         }
     }

@@ -59,7 +59,7 @@ public class Ticket implements Comparable<Ticket> {
     private void requestEvent(OutputWriter outputWriter, InputReader inputReader, Integer eventId, boolean scriptMode) throws InvalidInputFieldException, UserRejectedToFillFieldsException {
         outputWriter.writeOnWarning("Хотите ввести событие? (y/n): ");
         String answer = inputReader.getInputString();
-        if (answer != null && answer.equals("y")) {
+        if (answer != null && answer.equalsIgnoreCase("y")) {
             this.setEvent(Event.createEvent(outputWriter, inputReader, eventId, scriptMode));
         }
     }
